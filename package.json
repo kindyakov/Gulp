@@ -1,0 +1,50 @@
+{
+  "name": "gulp2023",
+  "version": "1.0.0",
+  "description": "my gulp build",
+  "main": "gulpfile.js",
+  "type": "module",
+  "scripts": {
+    "dev": "gulp",
+    "build": "gulp build --build",
+    "svgSprite": "gulp svgSprite",
+    "zip": "gulp deployZIP --build",
+    "deploy": "gulp deployFTP --build"
+  },
+  "keywords": [
+    "gulp"
+  ],
+  "author": "Kindyakov Andrey",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.28.3",
+    "del": "^7.0.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-file-include": "^2.3.0",
+    "gulp-fonter-fix": "^0.0.1",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-if": "^3.0.0",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-newer": "^1.4.0",
+    "gulp-notify": "^4.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.1.4",
+    "gulp-sass": "^5.1.0",
+    "gulp-svg-sprite": "^2.0.1",
+    "gulp-ttf2woff2": "^4.0.1",
+    "gulp-util": "^3.0.8",
+    "gulp-version-number": "^0.2.4",
+    "gulp-webp": "^4.0.1",
+    "gulp-webp-html-nosvg": "^1.1.1",
+    "gulp-webpcss": "^1.1.1",
+    "gulp-zip": "^5.1.0",
+    "sass": "^1.58.3",
+    "vinyl-ftp": "^0.6.1",
+    "webp-converter": "^2.2.3",
+    "webpack": "^5.76.0",
+    "webpack-stream": "^7.0.0"
+  }
+}

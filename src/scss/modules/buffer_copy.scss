@@ -1,0 +1,21 @@
+._copy {
+	position: relative;
+	z-index: 2;
+}
+._copy-info {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	white-space: nowrap;
+	font-weight: bold;
+	font-size: 13px;
+	padding: 4px 6px;
+	color: #797979;
+	background-color: #ffffff;
+	border-radius: 4px;
+	transition: 0.2s linear;
+	opacity: 0;
+}

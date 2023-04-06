@@ -1,0 +1,54 @@
+// Шрифты
+@import 'fonts';
+// Миксины
+@import 'mixins';
+// Обнуление стилей
+@import 'null';
+// переменные
+@import 'variables';
+
+body {
+	color: $color;
+	font-size: $font-size;
+	&._lock {
+		overflow: hidden;
+	}
+}
+
+.wrapper {
+	width: 100%;
+	min-height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	&._loaded {
+	}
+}
+
+._container {
+	max-width: $maxWidthContainer + px;
+	margin: 0 auto;
+	@media (max-width: $md1) {
+		max-width: 970px;
+	}
+	// $md2: 991.98px;
+	@media (max-width: $md2) {
+		max-width: 750px;
+	}
+	//$md3: 767.98px;
+	@media (max-width: $md3) {
+		max-width: none;
+		padding: 0 10px;
+	}
+	// $md4: 479.98px;
+	@media (max-width: $md4) {
+	}
+}
+
+@import 'header';
+@import 'footer';
+
+//<ОСНОВНОЙ БЛОК>
+.page {
+	flex: 1 1 auto;
+}
