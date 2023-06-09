@@ -1,10 +1,10 @@
-import configFTP from "../config/ftp.cfg"
+import configFTP from "../config/ftp.cfg.js"
 import vinyFTP from 'vinyl-ftp'
-import util from 'gupl-util'
+// import util from 'gupl-util'
 
 
 const ftp = () => {
-  configFTP.log = util.log
+  // configFTP.log = util.log
   const ftpConnect = vinyFTP.create(configFTP)
   return (
     app.gulp.src(app.path.build.project)

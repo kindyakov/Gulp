@@ -1,17 +1,43 @@
 // Шрифты
-@import 'fonts';
-// Миксины
-@import 'mixins';
-// Обнуление стилей
-@import 'null';
+@import 'components/fonts';
 // переменные
-@import 'variables';
+@import 'components/variables';
+// Обнуление стилей
+@import 'components/null';
+// Миксины
+@import 'components/mixins';
+
+* {
+	box-sizing: border-box;
+}
+*::-webkit-scrollbar {
+	width: 8px;
+}
+*::-webkit-scrollbar-track {
+	background-color: #fbf8ec;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: #ff6633;
+	border-radius: 10px;
+}
+
+html {
+	&._lock {
+		overflow: hidden;
+		position: relative;
+		height: 100%;
+	}
+}
 
 body {
 	color: $color;
 	font-size: $font-size;
+	touch-action: none;
+	// -ms-touch-action: none;
 	&._lock {
 		overflow: hidden;
+		position: relative;
+		height: 100%;
 	}
 }
 
@@ -26,7 +52,7 @@ body {
 }
 
 ._container {
-	max-width: $maxWidthContainer + px;
+	max-width: $maxWidthContainer;
 	margin: 0 auto;
 	@media (max-width: $md1) {
 		max-width: 970px;
@@ -45,8 +71,8 @@ body {
 	}
 }
 
-@import 'header';
-@import 'footer';
+@import 'styles/header';
+@import 'styles/footer';
 
 //<ОСНОВНОЙ БЛОК>
 .page {
