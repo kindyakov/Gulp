@@ -1,11 +1,11 @@
 // Шрифты
-@import 'components/fonts';
+@import 'settings/fonts';
 // переменные
-@import 'components/variables';
+@import 'settings/variables';
 // Обнуление стилей
-@import 'components/null';
+@import 'settings/null';
 // Миксины
-@import 'components/mixins';
+@import 'settings/mixins';
 
 * {
 	box-sizing: border-box;
@@ -71,8 +71,8 @@ body {
 	}
 }
 
-@import 'styles/header';
-@import 'styles/footer';
+@import 'components/header';
+@import 'components/footer';
 
 //<ОСНОВНОЙ БЛОК>
 .page {
