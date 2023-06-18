@@ -32,7 +32,7 @@ html {
 body {
 	color: $color;
 	font-size: $font-size;
-	touch-action: none;
+	// touch-action: none;
 	// -ms-touch-action: none;
 	&._lock {
 		overflow: hidden;
