@@ -1,5 +1,5 @@
 //====================================================================================================
-.popup {
+.modal {
 	-webkit-overflow-scrolling: touch;
 	z-index: 100;
 	padding: 30px 10px;
@@ -11,8 +11,8 @@
 	transition: visibility 0.8s ease 0s;
 	visibility: hidden;
 	&::before {
-		content: "";
-		background-color: rgba(0, 0, 0, 0.9);
+		content: '';
+		background-color: rgba(0, 0, 0, 0.7);
 		position: fixed;
 		width: 100%;
 		height: 100%;
@@ -21,13 +21,13 @@
 		opacity: 0;
 		transition: opacity 0.8s ease 0s;
 	}
-	&.show {
+	&._show {
 		visibility: visible;
 		overflow: auto;
 		&::before {
 			opacity: 1;
 		}
-		.popup__body {
+		.modal_body {
 			transform: scale(1);
 		}
 	}
@@ -37,13 +37,13 @@
 		&::before {
 			opacity: 1;
 		}
-		.popup__body {
+		.modal_body {
 			transition: all 0.3s ease 0.2s;
 			transform: scale(1);
 		}
 	}
-	// .popup__content
-	&__content {
+	// .midal_content
+	&_content {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -54,8 +54,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	// .popup__body
-	&__body {
+	// .modal__body
+	&_body {
 		transform: scale(0);
 		transition: all 0.3s ease 0s;
 		background-color: #fff;
@@ -63,16 +63,43 @@
 		width: 100%;
 		max-width: 800px;
 	}
-	// .popup__close
-	&__close {
-		width: 15px;
-		height: 15px;
+	// .modal_close
+	&_close {
+		width: 30px;
+		height: 30px;
 		position: absolute;
-		top: 0px;
-		right: 0px;
+		top: 0;
+		right: 0;
 		cursor: pointer;
-		z-index: 30;
-		background: url("../img/icons/close.svg") 0 0 no-repeat;
+		border: 2px solid rgb(117, 117, 117);
+		background-color: #dfdfdfd2;
+		border-radius: 8px;
+		transition: 0.2s;
+		transform: translate(50%, -50%);
+		span {
+			display: block;
+			position: absolute;
+			width: 50%;
+			height: 2px;
+			background-color: rgb(85, 83, 83);
+			transition: 0.2s;
+			left: 50%;
+			&:first-child {
+				transform: translateX(-50%) rotate(45deg);
+				top: 12px;
+			}
+			&:last-child {
+				transform: translateX(-50%) rotate(-45deg);
+				top: 12px;
+			}
+		}
+
+		&:hover {
+			border: 2px solid red;
+			span {
+				background-color: red;
+			}
+		}
 	}
 }
 //====================================================================================================
