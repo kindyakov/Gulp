@@ -34,7 +34,7 @@ const scss = () => {
         cascade: true
       })))
       // ========================>
-      .pipe(app.gulp.dest(app.path.build.css)) // добавляет не сжатый файл
+      .pipe(app.plugins.if(app.isDev, app.gulp.dest(app.path.build.css))) // добавляет не сжатый файл
       .pipe(cleanCss())
       .pipe(rename({
         extname: '.min.css'

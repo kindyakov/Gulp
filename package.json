@@ -9,6 +9,7 @@
     "build": "gulp build --build",
     "svgSprite": "gulp svgSprite",
     "zip": "gulp deployZIP --build",
+    "zipDev": "gulp deployZIP_DEV",
     "deploy": "gulp deployFTP --build"
   },
   "keywords": [

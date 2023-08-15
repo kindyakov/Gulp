@@ -1,7 +1,7 @@
 import { deleteAsync } from "del"
 import zipPlugins from "gulp-zip"
 
-const zip = () => {
+export const zip = () => {
   deleteAsync(`./${app.path.rootFolder}.zip`)
   return (
     app.gulp.src(app.path.build.project)
@@ -16,4 +16,18 @@ const zip = () => {
   )
 }
 
-export default zip
+export const zipDev = () => {
+  deleteAsync(`./${app.path.rootFolder}_dev.zip`); // Удаляем старый архив, если есть
+  return (
+    app.gulp.src([
+      'gulp/**/*', // gulp и все вложенные файлы и папки
+      'src/**/*', // src и все вложенные файлы и папки
+      'package.json',
+      'package-lock.json',
+      'gulpfile.js',
+      '.prettierrc',
+    ], { base: '.' }) // Указываем базовую директорию для корректной структуры в архиве
+      .pipe(zipPlugins(`${app.path.rootFolder}_dev.zip`))
+      .pipe(app.gulp.dest('./'))
+  );
+};
