@@ -2,7 +2,7 @@ import { deleteAsync } from "del"
 import zipPlugins from "gulp-zip"
 
 export const zip = () => {
-  deleteAsync(`./${app.path.rootFolder}.zip`)
+  deleteAsync(`./${app.path.rootFolder}_build.zip`)
   return (
     app.gulp.src(app.path.build.project)
       .pipe(app.plugins.plumber(
@@ -11,7 +11,7 @@ export const zip = () => {
           message: 'Error: <%= error.message %>'
         })
       ))
-      .pipe(zipPlugins(`${app.path.rootFolder}.zip`))
+      .pipe(zipPlugins(`${app.path.rootFolder}_build.zip`))
       .pipe(app.gulp.dest('./'))
   )
 }
