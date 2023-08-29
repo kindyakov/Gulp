@@ -19,6 +19,7 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.28.3",
+    "css-loader": "^6.8.1",
     "del": "^7.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
@@ -42,7 +43,8 @@
     "gulp-webp-html-nosvg": "^1.1.1",
     "gulp-webpcss": "^1.1.1",
     "gulp-zip": "^5.1.0",
-    "sass": "^1.58.3",
+    "sass": "^1.66.1",
+    "style-loader": "^3.3.3",
     "vinyl-ftp": "^0.6.1",
     "webp-converter": "^2.2.3",
     "webpack": "^5.76.0",

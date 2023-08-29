@@ -13,6 +13,14 @@ const js = () => {
         mode: app.isBuild ? 'production' : 'development',
         output: {
           filename: 'app.min.js'
+        },
+        module: {
+          rules: [
+            {
+              test: /\.css$/,
+              use: ['style-loader', 'css-loader']
+            }
+          ]
         }
       }))
       .pipe(app.gulp.dest(app.path.build.js))

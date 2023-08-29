@@ -1,0 +1,9 @@
+._my-tabs-btn {
+}
+
+._my-tabs-content {
+	display: none;
+	&._tab-content-active {
+		display: block;
+	}
+}

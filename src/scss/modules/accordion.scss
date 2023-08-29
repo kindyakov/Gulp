@@ -1,0 +1,18 @@
+._my-accordion {
+	overflow: hidden;
+	&._open {
+		._my-accordion-content {
+			opacity: 1;
+		}
+	}
+}
+
+._my-accordion-controler {
+}
+
+._my-accordion-content {
+	box-sizing: content-box;
+	max-height: 0;
+	opacity: 0;
+	will-change: max-height;
+}
