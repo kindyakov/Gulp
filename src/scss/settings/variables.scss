@@ -1,7 +1,7 @@
 $minWidth: 320px;
-$maxWidth: 1920px;
-$maxWidthContainer: 1200px;
-$md1: $maxWidthContainer + 15;
+$maxWidth: 1920;
+$maxWidthContainer: 1200;
+$md1: ($maxWidthContainer + 15) + px;
 $md2: 991.98px;
 $md3: 767.98px;
 $md4: 479.98px;

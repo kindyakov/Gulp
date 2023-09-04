@@ -43,6 +43,7 @@
     "gulp-webp-html-nosvg": "^1.1.1",
     "gulp-webpcss": "^1.1.1",
     "gulp-zip": "^5.1.0",
+    "prettierrc": "^0.0.0-5",
     "sass": "^1.66.1",
     "style-loader": "^3.3.3",
     "vinyl-ftp": "^0.6.1",
