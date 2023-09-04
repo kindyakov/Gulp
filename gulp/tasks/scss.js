@@ -18,11 +18,9 @@ const scss = () => {
           message: 'Error: <%= error.message %>'
         })
       ))
+      .pipe(sass({ outputStyle: `expanded` }))
       .pipe(app.plugins.replace(/@img\//g, '../img/'))
-      .pipe(sass({
-        outputStyle: `expanded`
-      }))
-      .pipe(groupCssMediaQueries())
+      .pipe(app.plugins.if(app.isBuild, groupCssMediaQueries()))
       // Выполнитья в режиме build
       .pipe(app.plugins.if(app.isBuild, webpcss({
         webpClass: '.webp',
@@ -35,10 +33,8 @@ const scss = () => {
       })))
       // ========================>
       .pipe(app.plugins.if(app.isDev, app.gulp.dest(app.path.build.css))) // добавляет не сжатый файл
-      .pipe(cleanCss())
-      .pipe(rename({
-        extname: '.min.css'
-      }))
+      .pipe(app.plugins.if(app.isBuild, cleanCss()))
+      .pipe(rename({ extname: '.min.css' }))
       .pipe(app.gulp.dest(app.path.build.css))
       .pipe(app.plugins.browserSync.stream())
   )

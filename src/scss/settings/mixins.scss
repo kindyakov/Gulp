@@ -3,7 +3,8 @@
 	@font-face {
 		font-family: $font_name;
 		font-display: swap;
-		src: url("../fonts/#{$file_name}.woff") format("woff"), url("../fonts/#{$file_name}.woff2") format("woff2");
+		src: url('../fonts/#{$file_name}.woff') format('woff'),
+			url('../fonts/#{$file_name}.woff2') format('woff2');
 		font-weight: #{$weight};
 		font-style: #{$style};
 	}
@@ -16,37 +17,65 @@
 		//Только если меньше контейнера
 		font-size: $pcSize + px;
 		@media (max-width: #{$maxWidthContainer + px}) {
-			font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+			font-size: calc(
+				#{$mobSize + px} + #{$addSize} *
+					((100vw - 320px) / #{$maxWidthContainer - 320})
+			);
 		}
 	} @else if $maxSize==2 {
 		//Только если больше контейнера
 		font-size: $pcSize + px;
 		@media (min-width: #{$maxWidthContainer + px}) {
-			font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+			font-size: calc(
+				#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+			);
 		}
 	} @else {
 		//Всегда
-		font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+		font-size: calc(
+			#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+		);
 	}
 }
 
 //Адаптивный отступ
+// @include adaptiv-value('font-size', 60, 40, 1); пример
 @mixin adaptiv-value($indentType, $pcSize, $mobSize, $maxSize) {
 	$addSize: $pcSize - $mobSize;
 	@if $maxSize==1 {
 		//Только если меньше контейнера
 		#{$indentType}: $pcSize + px;
 		@media (max-width: #{$maxWidthContainer + px}) {
-			#{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+			#{$indentType}: calc(
+				#{$mobSize + px} + #{$addSize} *
+					((100vw - 320px) / #{$maxWidthContainer - 320})
+			);
 		}
 	} @else if $maxSize==2 {
 		//Только если больше контейнера
 		#{$indentType}: $pcSize + px;
 		@media (min-width: #{$maxWidthContainer + px}) {
-			#{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+			#{$indentType}: calc(
+				#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+			);
 		}
 	} @else {
 		//Всегда
-		#{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+		#{$indentType}: calc(
+			#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+		);
+	}
+}
+
+//Адаптивное свойство до
+@mixin adaptiv-value-to($property, $startSize, $minSize, $minWidth) {
+	$addSize: $startSize - $minSize;
+
+	//#{$property}: $minSize + px;
+	@media (min-width: #{$minWidth + px}) {
+		#{$property}: calc(
+			#{$minSize + px} + #{$addSize} *
+				(((100vw - #{$minWidth + px})) / ((#{$maxWidth - $minWidth})))
+		);
 	}
 }

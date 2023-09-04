@@ -23,6 +23,7 @@ import svgSprite from './gulp/tasks/svgSprite.js'
 import { zip, zipDev } from './gulp/tasks/zip.js'
 import ftp from './gulp/tasks/ftp.js'
 import php from './gulp/tasks/php.js'
+import { video } from "./gulp/tasks/video.js";
 
 function watcher() {
   gulp.watch(path.watch.assets, copy)
@@ -37,7 +38,7 @@ function watcher() {
 // Последовательная обработка шрифтов 
 const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle)
 // Основные задачи
-const mainTasks = gulp.series(fonts, gulp.parallel(copy, html, scss, js, images, php))
+const mainTasks = gulp.series(fonts, video, gulp.parallel(copy, html, scss, js, images, php))
 // Сценарий выполнения задач 
 const dev = gulp.series(reset, mainTasks, gulp.parallel(watcher, server))
 const build = gulp.series(reset, mainTasks)

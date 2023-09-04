@@ -16,6 +16,7 @@ export const path = {
     assets: `${buildFolder}/assets/`,
     project: `${buildFolder}/**/*.*`,
     php: `${buildFolder}/php/`,
+    video: `${buildFolder}/video/`,
   },
   src: {
     html: `${srcFolder}/*.html`,
@@ -26,6 +27,7 @@ export const path = {
     svgicons: `${srcFolder}/svgicons/**/*.svg`,
     assets: `${srcFolder}/assets/**/*.*`,
     php: `${srcFolder}/php/**/*.*`,
+    video: `${srcFolder}/video/**/*.{mp3,mp4,avi,mkv,wmv,mov,flv,webm}`,
   },
   watch: {
     html: `${srcFolder}/**/*.html`,

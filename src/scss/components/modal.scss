@@ -37,13 +37,13 @@
 		&::before {
 			opacity: 1;
 		}
-		.modal_body {
+		.modal__body {
 			transition: all 0.3s ease 0.2s;
 			transform: scale(1);
 		}
 	}
 	// .midal_content
-	&_content {
+	&__content {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -55,7 +55,7 @@
 		align-items: center;
 	}
 	// .modal__body
-	&_body {
+	&__body {
 		transform: scale(0);
 		transition: all 0.3s ease 0s;
 		background-color: #fff;
@@ -64,7 +64,7 @@
 		max-width: 800px;
 	}
 	// .modal_close
-	&_close {
+	&__close {
 		width: 30px;
 		height: 30px;
 		position: absolute;

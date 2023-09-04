@@ -3,8 +3,14 @@ const server = (done) => {
     server: {
       baseDir: `${app.path.build.html}`,
       notify: false,
-      port: 8080,
+      port: 3000,
     }
+    // Раскомментировать для запуска на https
+    // server: `${app.path.build.html}`,
+    // https: {
+    // key: "./gulp/ssl/server.key",
+    // cert: "./gulp/ssl/server.crt"
+    // },
   })
 }
 

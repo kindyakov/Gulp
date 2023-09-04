@@ -3,13 +3,13 @@ export class Accordion {
     let deaultOptions = {
       isOpen: () => { },
       isEvent: () => { },
+      isAccordion: true
     }
     this.options = Object.assign(deaultOptions, options)
     this.accordWrapper = document.querySelector(selector)
     this.accordSelector = options.btnSelector || '._my-accordion'
     this.accordBtnSelector = options.btnSelector || '._my-accordion-controler'
     this.accordContentSelector = options.contentSelector || '._my-accordion-content'
-    this.isAccordion = 'false' === `${options.isAccordion}` ? options.isAccordion : true
 
     if (this.accordWrapper) {
       this.accords = this.accordWrapper.querySelectorAll(this.accordSelector)
@@ -19,9 +19,9 @@ export class Accordion {
       return
     }
 
-    const isErr = this.check()
+    const isSuccess = this.check()
 
-    if (isErr) {
+    if (isSuccess) {
       this.init()
       this.events()
     }
@@ -48,8 +48,8 @@ export class Accordion {
 
   init() {
     this.accords.forEach(el => el.classList.remove('_open'))
-    this.accordBtns.forEach(el => el.classList.remove('_open'))
-    this.accordContents.forEach(el => el.classList.remove('_open'))
+    // this.accordBtns.forEach(el => el.classList.remove('_open'))
+    // this.accordContents.forEach(el => el.classList.remove('_open'))
   }
 
   events() {
@@ -71,11 +71,9 @@ export class Accordion {
     })
   }
 
-  open(accordionTarget, accordionControler, accordionContent) {
-    this.isAccordion && this.close()
+  open(accordionTarget, accordionContent) {
+    this.options.isAccordion && this.close()
     accordionTarget.classList.add('_open')
-    accordionControler.classList.add('_open')
-    accordionContent.classList.add('_open')
     accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px'
   }
 
