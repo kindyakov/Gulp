@@ -1,11 +1,11 @@
 export class Accordion {
   constructor(selector, options) {
-    let deaultOptions = {
+    let defaultOptions = {
       isOpen: () => { },
       isEvent: () => { },
       isAccordion: true
     }
-    this.options = Object.assign(deaultOptions, options)
+    this.options = Object.assign(defaultOptions, options)
     this.accordWrapper = document.querySelector(selector)
     this.accordSelector = options.btnSelector || '._my-accordion'
     this.accordBtnSelector = options.btnSelector || '._my-accordion-controler'

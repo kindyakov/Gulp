@@ -1,0 +1,85 @@
+._select-custom {
+	&._none {
+		display: none;
+	}
+}
+
+.mySelect {
+	color: $color_main;
+	font-size: 20px;
+	font-weight: 600;
+	position: relative;
+	width: 100%;
+	user-select: none;
+
+	select {
+		display: none;
+	}
+
+	&._select {
+		.mySelect__input {
+		}
+
+		.mySelect__list {
+			transform: translate(0, 10px);
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.mySelect__option {
+		}
+	}
+
+	&__input {
+		border: 2px solid $color_main;
+		background-color: #fff;
+		border-radius: 10px;
+		padding: 20px;
+		text-align: left;
+		width: 100%;
+		cursor: pointer;
+		position: relative;
+	}
+
+	&__list {
+		position: absolute;
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		background-color: #fff;
+		border: 2px solid $color_main;
+		top: 100%;
+		z-index: 1;
+		left: 0;
+		right: 0;
+		width: 100%;
+		transform: translate(0, 0);
+		transition: 0.3s;
+		box-sizing: content-box;
+		max-height: 0;
+		visibility: hidden;
+		opacity: 0;
+		overflow: hidden;
+		will-change: max-height;
+		border-radius: 10px;
+	}
+
+	&__option {
+		text-align: left;
+		cursor: pointer;
+		padding: 20px;
+		text-align: left;
+		width: 100%;
+		transition: 0.2s;
+		border-bottom: 2px solid $color_main;
+		&:last-child {
+			border-bottom: none;
+		}
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.2);
+		}
+		&._none {
+			display: none;
+		}
+	}
+}
