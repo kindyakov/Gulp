@@ -1,5 +1,5 @@
 export class Select {
-  constructor(options) {
+  constructor(selector, options) {
     let defaultOptions = {
       onChange: () => { },
       selectCustom: '._select-custom',
@@ -11,13 +11,13 @@ export class Select {
     }
 
     this.options = Object.assign(defaultOptions, options)
-    this.selects = document.querySelectorAll(this.options.selectCustom)
+    this.selects = document.querySelectorAll(selector)
     this.isSelect = false
 
     if (this.selects.length) {
 
     } else {
-      this.options.isDev && console.log(`Ошибка: не найден select c классом "${this.options.selectCustom}"`)
+      this.options.isDev && console.log(`Ошибка: не найден select c классом "${selector}"`)
       return
     }
 
@@ -31,7 +31,7 @@ export class Select {
       const selectName = select.getAttribute('name')
 
       select.insertAdjacentHTML('afterend', this.custonSelectHtml(selectName, options))
-      select.classList.add("_none")
+      select.style.display = 'none'
     })
 
     this.custonSelects = document.querySelectorAll('.mySelect')

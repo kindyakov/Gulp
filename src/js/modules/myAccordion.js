@@ -1,3 +1,7 @@
+// Добавить аккордиону класс _my-accordion
+// Добавить кнопке для раскритие аккордиона класс _my-accordion-controler
+// Добавить контенту аккордиона класс _my-accordion-content
+
 export class Accordion {
   constructor(selector, options) {
     let defaultOptions = {
@@ -33,12 +37,12 @@ export class Accordion {
       const content = document.querySelector(this.accordContentSelector)
 
       if (!controler) {
-        console.log(el, 'В этом Accordion не найден ._my-accordion-controler')
+        console.log(el, `Здесь ${el} не найден ._my-accordion-controler`)
         return false
       }
 
       if (!content) {
-        console.log(el, 'В этом Accordion не найден ._my-accordion-content')
+        console.log(el, `Здесь ${el} не найден ._my-accordion-content`)
         return false
       }
     })

@@ -1,5 +1,5 @@
-import checkSupportWebP from "./modules/checkSupportWebP.js"
-import { useDynamicAdapt } from "./modules/dynamicAdapt.js"
+import checkSupportWebP from "./utils/checkSupportWebP.js"
+import { useDynamicAdapt } from "./utils/dynamicAdapt.js"
 
 checkSupportWebP()
 useDynamicAdapt()

@@ -13,7 +13,8 @@ const html = () => {
       ))
       .pipe(fileinclude())
       .pipe(app.plugins.replace(/@img\//g, 'img/'))
-      .pipe(app.plugins.if(app.isBuild, webpHtmlNosvg()))
+      // .pipe(app.plugins.if(app.isBuild, webpHtmlNosvg()))
+      .pipe(webpHtmlNosvg())
       .pipe(app.plugins.if(app.isBuild, versionNumber({
         'value': '%DT%',
         'append': {

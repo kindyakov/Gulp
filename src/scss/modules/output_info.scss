@@ -1,0 +1,46 @@
+.output-info {
+	position: fixed;
+	top: 0;
+	visibility: hidden;
+	opacity: 0;
+	z-index: 15;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -100%);
+	user-select: none;
+
+	&._active {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&__span {
+		display: block;
+		transition: 0.2s;
+		font-weight: 600;
+		font-size: 20px;
+		padding: 8px 12px;
+		border-radius: 4px;
+		color: #fff;
+		text-align: center;
+		white-space: nowrap;
+		position: absolute;
+		left: 50%;
+		top: 0;
+		transform: translate(-50%, 0);
+		box-sizing: content-box;
+		&._error {
+			background-color: #cf1d1d;
+		}
+		&._success {
+			background-color: #2ec720;
+		}
+		&._warning {
+			background-color: #d6c20c;
+		}
+	}
+
+	@media (max-width: 479.98px) {
+		width: 90%;
+	}
+}

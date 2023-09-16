@@ -1,17 +1,15 @@
 // клас для использования "_copy"
 // data-copy="" атрибут для текста у lable
 
-const bufferСopy = () => {
+export const bufferСopy = ({ delay = 150, showMS = 1500 }) => {
   const copyItems = document.querySelectorAll('._copy')
-  const htmlLabel = text => `<label class="_copy-info">${text}</label>`;
+  const htmlLabel = text => `<span class="_copy-info">${text}</span>`;
 
   let isLabel = true;
-  const delay = 150;
-  const showMS = 1500;
 
   const animateShow = [
-    { top: '0', opacity: '0', visibility: 'hidden' },
-    { top: '-100%', opacity: '1', visibility: 'visible' }
+    { transform: 'translate(-50%, 0)', opacity: '0', visibility: 'hidden' },
+    { transform: 'translate(-50%, -10px)', opacity: '1', visibility: 'visible' }
   ];
 
   const animateFade = [
@@ -40,7 +38,7 @@ const bufferСopy = () => {
     let anim = label.animate(animateShow, { duration: delay });
 
     anim.addEventListener('finish', () => {
-      label.style.cssText = `opacity: 1; top: -100%;`
+      label.style.cssText = `opacity: 1; transform: translate(-50%, -10px);`
       setTimeout(() => removeLabel(label), showMS)
     });
   }
@@ -60,5 +58,3 @@ const bufferСopy = () => {
     item.addEventListener('click', handlerCopy)
   }
 }
-
-export default bufferСopy;

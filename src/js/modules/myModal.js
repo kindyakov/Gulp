@@ -26,7 +26,7 @@ export class myModal {
         return
       }
 
-      if (e.target.closest('.modal_close')) {
+      if (e.target.closest('.modal__close')) {
         this.close()
         return
       }
