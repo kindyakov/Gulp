@@ -42,7 +42,7 @@
 			transform: scale(1);
 		}
 	}
-	// .midal_content
+	// .modal__content
 	&__content {
 		display: flex;
 		flex-direction: column;
@@ -63,7 +63,7 @@
 		width: 100%;
 		max-width: 800px;
 	}
-	// .modal_close
+	// .modal__close
 	&__close {
 		width: 30px;
 		height: 30px;

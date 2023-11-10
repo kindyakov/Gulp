@@ -1,5 +1,6 @@
 ._my-accordion {
 	overflow: hidden;
+	transition: 0.2s;
 	&._open {
 		._my-accordion-content {
 			opacity: 1;
@@ -15,4 +16,5 @@
 	max-height: 0;
 	opacity: 0;
 	will-change: max-height;
+	transition: 0.2s;
 }

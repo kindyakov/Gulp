@@ -2,17 +2,20 @@ export class Select {
   constructor(selector, options) {
     let defaultOptions = {
       onChange: () => { },
-      selectCustom: '._select-custom',
+      selectCustom: '_select-custom',
       selectInput: '.mySelect__input',
       selectList: '.mySelect__list',
       selectOption: '.mySelect__option',
       classActive: '_select',
+      placeholder: false,
       isDev: false,
     }
 
+    this.selector = selector
     this.options = Object.assign(defaultOptions, options)
-    this.selects = document.querySelectorAll(selector)
-    this.isSelect = false
+    this.selects = document.querySelectorAll(`select${selector}`)
+    this.isActive = false
+    this.selectValue = null
 
     if (this.selects.length) {
 
@@ -30,64 +33,70 @@ export class Select {
       const options = select.querySelectorAll('option')
       const selectName = select.getAttribute('name')
 
-      select.insertAdjacentHTML('afterend', this.custonSelectHtml(selectName, options))
+      select.insertAdjacentHTML('afterend', this.customSelectHtml(selectName, options))
       select.style.display = 'none'
     })
 
-    this.custonSelects = document.querySelectorAll('.mySelect')
+    this.selectCustom = document.querySelectorAll(`.mySelect.${this.options.selectCustom}`)
   }
 
   events() {
-    this.custonSelects.forEach(select => {
-      select.addEventListener('click', e => {
-        const selectInput = select.querySelector(this.options.selectInput)
-        const selectList = select.querySelector(this.options.selectList)
+    document.addEventListener('click', e => {
+      if (!e.target.closest(`.mySelect.${this.options.selectCustom}`)) return
+      const select = e.target.closest(`.mySelect.${this.options.selectCustom}`)
+      const selectInput = select.querySelector(this.options.selectInput)
+      const selectInputSpan = select.querySelector(`${this.options.selectInput} span`)
+      const selectList = select.querySelector(this.options.selectList)
 
-        if (e.target.closest(this.options.selectInput)) {
-          if (select.classList.contains(this.options.classActive)) {
-            this.close(select, selectList)
-          } else {
-            this.open(select, selectList)
-          }
-        }
 
-        if (e.target.closest(this.options.selectOption)) {
-          const optionValue = e.target.innerText
-          selectInput.innerText = optionValue
-          selectInput.setAttribute('data-value', optionValue)
-          this.disableSelectedOption(select)
-          this.changeSelectOption(select, optionValue)
-          this.close(select, selectList)
+      if (e.target.closest(this.options.selectInput)) {
+        // if (select.classList.contains(this.options.classActive) && this.isActive) {
+        //   this.close(select, selectList)
+        // } else {
+        this.open(select, selectList)
+        // }
+      }
 
-          this.options.onChange()
-        }
-      })
+      if (e.target.closest(this.options.selectOption)) {
+        const optionValue = e.target.getAttribute('data-value')
+        const optionText = e.target.innerText
+
+        selectInputSpan.classList.remove('placeholder')
+        selectInputSpan.innerText = optionText
+        selectInput.setAttribute('data-value', optionValue)
+
+        this.disableSelectedOption(select)
+        this.changeSelectOption(select, optionValue)
+        this.close(select, selectList)
+
+        this.options.onChange(e, select)
+      }
     })
 
     window.addEventListener('keyup', (e) => {
       if (e.key === 'Escape') {
-        this.custonSelects.forEach(_select => this.close(_select))
+        this.selectCustom.forEach(_select => this.close(_select))
       }
     })
 
     document.addEventListener('click', e => {
       if (!e.target.closest('.mySelect')) {
-        this.custonSelects.forEach(_select => this.close(_select))
+        this.selectCustom.forEach(_select => this.close(_select))
       }
     })
   }
 
   open(select, selectList) {
-    this.custonSelects.forEach(_select => this.close(_select))
+    // this.selectCustom.forEach(_select => this.close(_select))
     select.classList.add(this.options.classActive)
     selectList.style.maxHeight = selectList.scrollHeight + 'px'
-    this.isSelect = true
+    this.isActive = true
   }
 
   close(select) {
     select.classList.remove(this.options.classActive)
     select.querySelector(this.options.selectList).style.maxHeight = null
-    this.isSelect = false
+    this.isActive = false
   }
 
   disableSelectedOption(select) {
@@ -95,24 +104,36 @@ export class Select {
     const options = select.querySelectorAll(this.options.selectOption)
 
     options.forEach(option => {
-      const value = option.getAttribute('data-value')
+      let value = option.getAttribute('data-value')
       option.classList.remove('_none')
-      value === selectedOptionValue && option.classList.add('_none')
+      option.classList.remove('_option-list')
+      option.classList.add('_show')
+      if (value === selectedOptionValue) {
+        option.classList.add('_none')
+        option.classList.remove('_show')
+      }
     })
+
+    const optionsShow = select.querySelectorAll(`${this.options.selectOption}._show`)
+    optionsShow[optionsShow.length - 1].classList.add('_option-list')
+
   }
 
   changeSelectOption(select, optionValue) {
     const selectName = select.getAttribute('data-name')
-    const defaultSelect = document.querySelector(`${this.options.selectCustom}[name="${selectName}"]`)
-    defaultSelect.value = optionValue
+    const defaultSelect = document.querySelector(`${this.selector}[name="${selectName}"]`)
+    if (defaultSelect) {
+      defaultSelect.value = optionValue
+      this.selectValue = optionValue
+    }
   }
 
-  custonSelectHtml(name, options) {
-    return `<div class="mySelect" data-name="${name}">
-    <div class="mySelect__input" data-value="${options[0].value}">${options[0].value}</div>
+  customSelectHtml(name, options) {
+    return `<div class="mySelect ${this.options.selectCustom}" data-name="${name}">
+    <div class="mySelect__input" data-value="${this.options.placeholder && this.options.placeholder.length ? null : options[0].value}">${this.options.placeholder && this.options.placeholder.length ? `<span class="placeholder">${this.options.placeholder}</span>` : `<span>${options[0].value}</span>`} ${this.options.inputHtml && this.options.inputHtml.length ? this.options.inputHtml : ''}</div>
     <ul class="mySelect__list">
-    ${Array.from(options).map(option => `<li class="mySelect__option ${options[0].value === option.value ? '_none' : ''}" data-value="${option.value}">${option.value}</li>`).join('')}
+    ${Array.from(options).map(option => `<li class="mySelect__option ${options[0].value === option.value && !this.options.placeholder ? '_none' : ''}" data-value="${option.value}">${option.textContent}</li>`).join('')}
     </ul >
-  </div > `
+  </div>`
   }
 }

@@ -64,7 +64,7 @@ export class Accordion {
         const accordionContent = accordionTarget.querySelector(this.accordContentSelector)
 
         if (!accordionTarget.classList.contains('_open')) {
-          this.open(accordionTarget, accordionControler, accordionContent)
+          this.open(accordionTarget, accordionContent)
           this.options.isOpen(e)
         } else {
           accordionTarget.classList.remove('_open')

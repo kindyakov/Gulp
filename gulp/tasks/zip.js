@@ -23,9 +23,7 @@ export const zipDev = () => {
       'gulp/**/*', // gulp и все вложенные файлы и папки
       'src/**/*', // src и все вложенные файлы и папки
       'package.json',
-      'package-lock.json',
       'gulpfile.js',
-      '.prettierrc',
     ], { base: '.' }) // Указываем базовую директорию для корректной структуры в архиве
       .pipe(zipPlugins(`${app.path.rootFolder}_dev.zip`))
       .pipe(app.gulp.dest('./'))

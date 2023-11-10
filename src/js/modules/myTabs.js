@@ -1,19 +1,28 @@
+// * Чтобы запустить Tabs нужно обертке или родителю добавить атрибут  data-tabs-init="название"]
+// * по умолчание класс для кнопок _my-tabs-btn и для контента класс _my-tabs-content
+// * параметр lotOfTabs даёт возможность запустить сразу много табов, для этого нужно каждый таб обернуть div и передать его селектор в lotOfTabs
+
 export class Tabs {
   constructor(selector, options) {
-    let deaultOptions = {
-      isChange: () => { },
-      isInit: () => { },
+    let defaultOptions = {
+      onChange: () => { },
+      onInit: () => { },
+      btnSelector: '._my-tabs-btn',
+      contentSelector: '._my-tabs-content',
+      activeIndexTab: 0,
+      lotOfTabs: false
     }
 
-    this.options = Object.assign(deaultOptions, options)
+    this.options = Object.assign(defaultOptions, options)
     this.selector = selector
     this.tabs = document.querySelector(`[data-tabs-init="${selector}"]`)
-    this.tabsBtnSelector = this.options.btnSelector || '._my-tabs-btn'
-    this.tabsContentSelector = this.options.contentSelector || '._my-tabs-content'
+
+    this.tabsBtnActive = null
+    this.tabsContentActive = null
 
     if (this.tabs) {
-      this.tabsBtns = this.tabs.querySelectorAll(this.tabsBtnSelector)
-      this.tabsContents = this.tabs.querySelectorAll(this.tabsContentSelector)
+      this.tabsBtns = this.tabs.querySelectorAll(this.options.btnSelector)
+      this.tabsContents = this.tabs.querySelectorAll(this.options.contentSelector)
     } else {
       return false
     }
@@ -36,49 +45,86 @@ export class Tabs {
   }
 
   init() {
-    this.tabsBtns.forEach((el, i) => {
-      el.classList.remove('_tab-btn-active')
-      el.classList.add('_my-tabs-btn')
-      el.setAttribute('data-tabs-btn', `${this.selector}-${i}`)
-    })
+    if (this.options.lotOfTabs && this.options.lotOfTabs.length) {
+      const tabsWp = document.querySelectorAll(this.options.lotOfTabs)
 
-    this.tabsContents.forEach((el, i) => {
-      el.classList.remove('_tab-content-active')
-      el.classList.add('_my-tabs-content')
-      el.setAttribute('data-tabs-content', this.tabsBtns[i].getAttribute('data-tabs-btn'))
-    })
+      tabsWp.length && tabsWp.forEach((tabWp, i) => {
+        let tabsBtn = tabWp.querySelectorAll(this.options.btnSelector)
+        let tabsContent = tabWp.querySelectorAll(this.options.contentSelector)
 
-    this.tabsBtns[0].classList.add('_tab-btn-active')
-    this.tabsContents[0].classList.add('_tab-content-active')
+        tabsBtn.length && tabsBtn.forEach((btn, _i) => {
+          if (_i === this.options.activeIndexTab) {
+            btn.classList.add('_tab-btn-active')
+            this.tabsBtnActive = btn
+          } else {
+            btn.classList.remove('_tab-btn-active')
+          }
+          btn.setAttribute('data-tabs-btn', `${this.selector}-${i}_${_i}`)
+        })
 
-    this.options.isInit()
+        tabsContent.length && tabsContent.forEach((content, _i) => {
+          if (_i === this.options.activeIndexTab) {
+            content.classList.add('_tab-content-active')
+            this.tabsContentActive = content
+          } else {
+            content.classList.remove('_tab-content-active')
+          }
+          content.setAttribute('data-tabs-content', `${this.selector}-${i}_${_i}`)
+        })
+      })
+
+
+    } else {
+      this.tabsBtns.length && this.tabsBtns.forEach((el, i) => {
+        el.classList.remove('_tab-btn-active')
+        el.setAttribute('data-tabs-btn', `${this.selector}-${i}`)
+      })
+
+      this.tabsContents.length && this.tabsContents.forEach((el, i) => {
+        el.classList.remove('_tab-content-active')
+        el.setAttribute('data-tabs-content', this.tabsBtns[i].getAttribute('data-tabs-btn'))
+      })
+
+      this.tabsBtns[this.options.activeIndexTab].classList.add('_tab-btn-active')
+      this.tabsContents[this.options.activeIndexTab].classList.add('_tab-content-active')
+
+      this.tabsBtnActive = this.tabsBtns[this.options.activeIndexTab]
+      this.tabsContentActive = this.tabsContents[this.options.activeIndexTab]
+    }
+
+    this.options.onInit(this.tabsBtnActive, this.tabsContentActive)
   }
 
   events() {
     this.tabsBtns.forEach((el, i) => {
+
       el.addEventListener('click', e => {
-        const currentTabBtn = this.tabs.querySelector('._tab-btn-active')
+        const prevTabBtn = e.currentTarget.parentNode.querySelector(`${this.options.btnSelector}._tab-btn-active`)
 
-        if (e.currentTarget !== currentTabBtn) {
-          this.switchTabs(e.currentTarget, currentTabBtn)
+        if (e.currentTarget !== prevTabBtn) {
+          this.switchTabs(e.currentTarget, prevTabBtn)
         }
-
-        this.options.isChange(e)
       })
     })
   }
 
-  switchTabs(nexTabBtn, prevTabBtn = this.tabs.querySelector(`${this.tabsBtnSelector}._tab-btn-active`)) {
-    const prevTabId = prevTabBtn.getAttribute('data-tabs-btn')
-    const nextTabId = nexTabBtn.getAttribute('data-tabs-btn')
+  switchTabs(nextTabBtn, prevTabBtn = this.tabs.querySelector(`${this.options.btnSelector}._tab-btn-active`)) {
+    if (!nextTabBtn || !prevTabBtn) return
 
-    const prevTabContent = this.tabs.querySelector(`[data-tabs-content="${prevTabId}"]`)
-    const nextTabContent = this.tabs.querySelector(`[data-tabs-content="${nextTabId}"]`)
+    const prevTabId = prevTabBtn.getAttribute('data-tabs-btn')
+    const nextTabId = nextTabBtn.getAttribute('data-tabs-btn')
+
+    const prevTabContent = this.tabs.querySelector(`${this.options.contentSelector}[data-tabs-content="${prevTabId}"]`)
+    const nextTabContent = this.tabs.querySelector(`${this.options.contentSelector}[data-tabs-content="${nextTabId}"]`)
 
     prevTabBtn.classList.remove('_tab-btn-active')
-    nexTabBtn.classList.add('_tab-btn-active')
+    nextTabBtn.classList.add('_tab-btn-active')
 
     prevTabContent.classList.remove('_tab-content-active')
     nextTabContent.classList.add('_tab-content-active')
+
+    this.tabsBtnActive = nextTabBtn
+    this.tabsContentActive = nextTabContent
+    this.options.onChange({ nextTabBtn, prevTabBtn, nextTabContent, prevTabContent })
   }
 }

@@ -18,7 +18,7 @@ import server from './gulp/tasks/server.js'
 import scss from './gulp/tasks/scss.js'
 import js from './gulp/tasks/js.js'
 import images from './gulp/tasks/images.js'
-import { otfToTtf, ttfToWoff, fontsStyle } from './gulp/tasks/fonts.js'
+import { otfToTtf, ttfToWoff, fontsStyle, iconsfonts } from './gulp/tasks/fonts.js'
 import svgSprite from './gulp/tasks/svgSprite.js'
 import { zip, zipDev } from './gulp/tasks/zip.js'
 import ftp from './gulp/tasks/ftp.js'
@@ -36,9 +36,9 @@ function watcher() {
 
 
 // Последовательная обработка шрифтов 
-const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle)
+const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle, iconsfonts)
 // Основные задачи
-const mainTasks = gulp.series(fonts, video, gulp.parallel(copy, html, scss, js, images, php))
+const mainTasks = gulp.series(video, gulp.parallel(copy, html, scss, js, images, php))
 // Сценарий выполнения задач 
 const dev = gulp.series(reset, mainTasks, gulp.parallel(watcher, server))
 const build = gulp.series(reset, mainTasks)
@@ -49,4 +49,4 @@ const deployFTP = gulp.series(reset, mainTasks, ftp)
 gulp.task('default', dev)
 
 // export сценариев
-export { dev, build, svgSprite, deployZIP, deployFTP, deployZIP_DEV }
+export { dev, build, fonts, svgSprite, deployZIP, deployFTP, deployZIP_DEV }

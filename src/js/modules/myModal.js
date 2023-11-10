@@ -1,16 +1,18 @@
-export class myModal {
+export class Modal {
   constructor(selector, options) {
     let defaultoptions = {
       onOpen: () => { },
       onClose: () => { },
-      modalbtnActive: '.modal-btn-active',
+      modalBtnActive: '.modal-btn-active',
+      modalBtnClose: '.modal__close',
       classActive: '_active',
-      modalContent: 'modal__body'
+      modalContent: 'modal__body',
+      isClose: true,
+      isAnimation: false
     }
     this.options = Object.assign(defaultoptions, options)
     this.modal = document.querySelector(selector)
     this.speed = 300
-    this.isAnimation = false
     this.isOpen = false
     this.modalContainer = false
     this.fixBocks = document.querySelectorAll('.fix-block')
@@ -21,27 +23,28 @@ export class myModal {
   events() {
     if (!this.modal) return
     document.addEventListener('click', e => {
-      if (e.target.closest(this.options.modalbtnActive)) {
-        this.open()
+      if (e.target.closest(this.options.modalBtnActive)) {
+        e.preventDefault()
+        this.open(e)
         return
       }
 
-      if (e.target.closest('.modal__close')) {
-        this.close()
+      if (e.target.closest(this.options.modalBtnClose) && this.isOpen) {
+        this.options.isClose && this.close()
         return
       }
     })
 
     this.modal.addEventListener('click', e => {
       if (!e.target.closest(`.${this.options.modalContent}`) && this.isOpen) {
-        this.close()
+        this.options.isClose && this.close()
       }
     })
 
     window.addEventListener('keyup', (e) => {
       if (e.key === 'Escape') {
         if (this.isOpen) {
-          this.close()
+          this.options.isClose && this.close()
         }
       }
     })
@@ -54,12 +57,14 @@ export class myModal {
     this.enableScroll()
   }
 
-  open(selector) {
-    this.modal.classList.add(this.options.classActive)
-    this.disableScroll()
+  open(e) {
+    setTimeout(() => {
+      this.modal.classList.add(this.options.classActive)
+      this.disableScroll()
 
-    this.isOpen = true
-    this.options.onOpen(this)
+      this.isOpen = true
+      this.options.onOpen(e)
+    }, 0)
   }
 
   disableScroll() {
@@ -82,10 +87,11 @@ export class myModal {
   lockPadding() {
     const paddingOffset = window.innerWidth - document.body.offsetWidth + 'px'
     this.modal.style.paddingRight = paddingOffset
+    document.querySelector('.wrapper').style.paddingRight = paddingOffset
   }
 
   unlockPadding() {
     this.modal.removeAttribute('style')
+    document.querySelector('.wrapper').style.paddingRight = 0
   }
 }
-

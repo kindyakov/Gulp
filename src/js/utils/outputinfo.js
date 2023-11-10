@@ -36,6 +36,8 @@ export const outputInfo = ({ msg = 'Нет текста ответа', msg_type 
     span.classList.add('_error')
   } else if (msg_type === 'warning') {
     span.classList.add('_warning')
+  } else {
+    span.classList.add('_error')
   }
 
   function addGap() {

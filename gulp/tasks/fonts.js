@@ -93,3 +93,9 @@ export const fontsStyle = () => {
   function cb() { }
 }
 
+export const iconsfonts = () => {
+  return (
+    app.gulp.src(`${app.path.srcFolder}/fonts/iconsfonts/**.*`)
+      .pipe(app.gulp.dest(`${app.path.build.fonts}iconsfonts/`))
+  )
+}

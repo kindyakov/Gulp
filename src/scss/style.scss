@@ -22,6 +22,7 @@
 }
 
 html {
+	// scroll-behavior: smooth;
 	&._lock {
 		overflow: hidden;
 		position: relative;
@@ -52,22 +53,25 @@ body {
 }
 
 ._container {
-	max-width: $maxWidthContainer;
+	max-width: $maxWidthContainer + px;
 	margin: 0 auto;
 	@media (max-width: $md1) {
 		max-width: 970px;
 	}
-	// $md2: 991.98px;
+	// $md2: 992.98px;
 	@media (max-width: $md2) {
 		max-width: 750px;
 	}
-	//$md3: 767.98px;
+	//$md3: 768.98px;
 	@media (max-width: $md3) {
 		max-width: none;
 		padding: 0 10px;
 	}
-	// $md4: 479.98px;
+	// $md4: 576.98px;
 	@media (max-width: $md4) {
+	}
+	// $md5: 479.98px;
+	@media (max-width: $md5) {
 	}
 }
 
@@ -80,8 +84,8 @@ body {
 // @import 'modules/tabs';
 // @import 'modules/select';
 // @import 'modules/output_info';
-
+// @import 'modules/loader';
 //<ОСНОВНОЙ БЛОК>
-.page {
+.main {
 	flex: 1 1 auto;
 }
