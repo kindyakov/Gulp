@@ -7,8 +7,10 @@ export class Select {
       selectList: '.mySelect__list',
       selectOption: '.mySelect__option',
       classActive: '_select',
+      activeIndex: 0,
       placeholder: false,
       isDev: false,
+      isDisabled: false
     }
 
     this.selector = selector
@@ -44,10 +46,12 @@ export class Select {
     document.addEventListener('click', e => {
       if (!e.target.closest(`.mySelect.${this.options.selectCustom}`)) return
       const select = e.target.closest(`.mySelect.${this.options.selectCustom}`)
+
+      if (select.classList.contains('_disabled')) return
+
       const selectInput = select.querySelector(this.options.selectInput)
       const selectInputSpan = select.querySelector(`${this.options.selectInput} span`)
       const selectList = select.querySelector(this.options.selectList)
-
 
       if (e.target.closest(this.options.selectInput)) {
         // if (select.classList.contains(this.options.classActive) && this.isActive) {
@@ -87,7 +91,7 @@ export class Select {
   }
 
   open(select, selectList) {
-    // this.selectCustom.forEach(_select => this.close(_select))
+    this.selectCustom.forEach(_select => this.close(_select))
     select.classList.add(this.options.classActive)
     selectList.style.maxHeight = selectList.scrollHeight + 'px'
     this.isActive = true
@@ -129,10 +133,10 @@ export class Select {
   }
 
   customSelectHtml(name, options) {
-    return `<div class="mySelect ${this.options.selectCustom}" data-name="${name}">
-    <div class="mySelect__input" data-value="${this.options.placeholder && this.options.placeholder.length ? null : options[0].value}">${this.options.placeholder && this.options.placeholder.length ? `<span class="placeholder">${this.options.placeholder}</span>` : `<span>${options[0].value}</span>`} ${this.options.inputHtml && this.options.inputHtml.length ? this.options.inputHtml : ''}</div>
+    return `<div class="mySelect ${this.options.selectCustom} ${this.options.isDisabled ? '_disabled' : ''}" data-name="${name}">
+    <div class="mySelect__input" data-value="${this.options.placeholder && this.options.placeholder.length ? null : options[this.options.activeIndex].value}">${this.options.placeholder && this.options.placeholder.length ? `<span class="placeholder">${this.options.placeholder}</span>` : `<span>${options[this.options.activeIndex].textContent}</span>`} ${this.options.inputHtml && this.options.inputHtml.length ? this.options.inputHtml : ''}</div>
     <ul class="mySelect__list">
-    ${Array.from(options).map(option => `<li class="mySelect__option ${options[0].value === option.value && !this.options.placeholder ? '_none' : ''}" data-value="${option.value}">${option.textContent}</li>`).join('')}
+    ${Array.from(options).map(option => `<li class="mySelect__option ${options[this.options.activeIndex].value === option.value && !this.options.placeholder ? '_none' : ''}" data-value="${option.value}">${option.textContent}</li>`).join('')}
     </ul >
   </div>`
   }
