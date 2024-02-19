@@ -38,7 +38,7 @@ export class Tabs {
       return false
     }
 
-    if (this.tabsBtns.length !== this.tabsContents.length) {
+    if (this.tabsBtns.length !== this.tabsContents.length && !this.options.lotOfTabs) {
       console.error('Количество кнопок и элементов табов не совпадает!')
       return false
     }
@@ -108,23 +108,23 @@ export class Tabs {
     })
   }
 
-  switchTabs(nextTabBtn, prevTabBtn = this.tabs.querySelector(`${this.options.btnSelector}._tab-btn-active`)) {
-    if (!nextTabBtn || !prevTabBtn) return
+  switchTabs(nexTabBtn, prevTabBtn = this.tabs.querySelector(`${this.options.btnSelector}._tab-btn-active`)) {
+    if (!nexTabBtn || !prevTabBtn) return
 
     const prevTabId = prevTabBtn.getAttribute('data-tabs-btn')
-    const nextTabId = nextTabBtn.getAttribute('data-tabs-btn')
+    const nextTabId = nexTabBtn.getAttribute('data-tabs-btn')
 
     const prevTabContent = this.tabs.querySelector(`${this.options.contentSelector}[data-tabs-content="${prevTabId}"]`)
     const nextTabContent = this.tabs.querySelector(`${this.options.contentSelector}[data-tabs-content="${nextTabId}"]`)
 
     prevTabBtn.classList.remove('_tab-btn-active')
-    nextTabBtn.classList.add('_tab-btn-active')
+    nexTabBtn.classList.add('_tab-btn-active')
 
     prevTabContent.classList.remove('_tab-content-active')
     nextTabContent.classList.add('_tab-content-active')
 
-    this.tabsBtnActive = nextTabBtn
+    this.tabsBtnActive = nexTabBtn
     this.tabsContentActive = nextTabContent
-    this.options.onChange({ nextTabBtn, prevTabBtn, nextTabContent, prevTabContent })
+    this.options.onChange(nexTabBtn, prevTabBtn, nextTabContent, prevTabContent)
   }
 }

@@ -10,7 +10,8 @@ export class Select {
       activeIndex: 0,
       placeholder: false,
       isDev: false,
-      isDisabled: false
+      isDisabled: false,
+      inputHtml: null
     }
 
     this.selector = selector
@@ -73,7 +74,7 @@ export class Select {
         this.changeSelectOption(select, optionValue)
         this.close(select, selectList)
 
-        this.options.onChange(e, select)
+        this.options.onChange(e, select, optionValue)
       }
     })
 

@@ -70,3 +70,95 @@ export const utilsScroll = (selectorLinks = '.link-scroll') => {
 
   })
 }
+
+export const utilsDropdown = (
+  { selectorDropdown = '.dropdown',
+    selectorDropdownActive = '_dropdown-active',
+    selectorSubDropdown = '.sub-dropdown',
+    selectorDropdownBtn = '.dropdown-btn',
+    selectorDropdownBtnActive = '_dropdown-btn-active',
+    md = 768
+  }
+) => {
+  const dropdownButtons = document.querySelectorAll(selectorDropdownBtn)
+  const mediaQueryList = window.matchMedia(`(max-width: ${md}px)`);
+
+  function handleClick(e) {
+    const btn = e.target.closest(selectorDropdownBtn)
+    const dropdownLevel = btn.getAttribute('data-dropdown-level')
+    const dropdown = btn.parentElement.querySelector(dropdownLevel === '1' ? selectorDropdown : selectorSubDropdown)
+
+    if (btn.classList.contains(selectorDropdownBtnActive)) {
+      const dropdownsSecondLevel = dropdown.querySelectorAll(selectorSubDropdown)
+      const dropdownButtonsSecondLevel = dropdown.querySelectorAll(selectorDropdownBtn)
+
+      dropdownsSecondLevel.length && dropdownsSecondLevel.forEach((dropdownSecondLevel, i) => {
+        dropdownButtonsSecondLevel[i].classList.remove(selectorDropdownBtnActive)
+        dropdownSecondLevel.classList.remove(selectorDropdownActive)
+        dropdownSecondLevel.style.maxHeight = 0
+      })
+
+      btn.classList.remove(selectorDropdownBtnActive)
+      dropdown.classList.remove(selectorDropdownActive)
+      dropdown.style.maxHeight = 0
+    } else {
+      btn.classList.add(selectorDropdownBtnActive)
+
+      if (dropdownLevel === '2') {
+        const dropdownFirstLevel = dropdown.closest(selectorDropdown)
+        dropdownFirstLevel.style.maxHeight = (dropdownFirstLevel.scrollHeight + dropdown.scrollHeight + 30) + 'px' // 30 - это отступы которые добавляются с классом selectorDropdown у selectorSubDropdown
+
+        dropdown.classList.add(selectorDropdownActive)
+        dropdown.style.maxHeight = dropdown.scrollHeight + 'px'
+      } else {
+        dropdown.classList.add(selectorDropdownActive)
+        dropdown.style.maxHeight = dropdown.scrollHeight + 'px'
+      }
+    }
+  }
+
+  function removeStyleDropdown(dropdown) {
+    if (dropdown) {
+      dropdown.removeAttribute('style')
+      dropdown.classList.remove(selectorDropdownActive)
+    }
+  }
+
+  function handleMediaChange(mediaQueryList) {
+    if (mediaQueryList.matches) {
+      // Если условие медиа соответствует, добавляем обработчик
+      dropdownButtons.forEach(btn => btn.addEventListener('click', handleClick));
+      console.log('asd');
+    } else {
+      const dropdownFirstLevel = document.querySelectorAll(selectorDropdown)
+      const dropdownsSecondLevel = document.querySelectorAll(selectorSubDropdown)
+
+      // Иначе удаляем обработчик
+      dropdownButtons.forEach((btn, i) => {
+        removeStyleDropdown(dropdownFirstLevel[i])
+        removeStyleDropdown(dropdownsSecondLevel[i])
+
+        btn.classList.remove(selectorDropdownBtnActive)
+        btn.removeEventListener('click', handleClick)
+      });
+    }
+  }
+
+  // Добавляем обработчик события изменения условий медиа
+  mediaQueryList.addEventListener('change', (e) => handleMediaChange(e.target));
+
+  // Вызываем функцию обработчика, чтобы установить начальное состояние
+  handleMediaChange(mediaQueryList);
+}
+
+export const utilsLinkActive = (linkSelector = '.header__link') => {
+  const links = document.querySelectorAll(`a${linkSelector}`)
+
+  links.length && links.forEach(link => {
+    if (link.href === location.href) {
+      link.classList.add('_active')
+    } else {
+      link.classList.remove('_active')
+    }
+  })
+}

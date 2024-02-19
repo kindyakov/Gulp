@@ -10,3 +10,16 @@ export const maxHeightBlocks = (selector) => {
     })
   }
 }
+
+export const maxWidthBlocks = (selector) => {
+  const blocks = document.querySelectorAll(selector)
+
+  if (blocks.length) {
+    let blockWidth = Array.from(blocks).map(block => block.getBoundingClientRect().width)
+    let maxWidth = Math.max(...blockWidth)
+
+    blocks.length && blocks.forEach(block => {
+      block.style.minWidth = maxWidth + 'px'
+    })
+  }
+}

@@ -38,7 +38,6 @@
 	&__list {
 		position: absolute;
 		display: flex;
-		align-items: flex-start;
 		flex-direction: column;
 		background-color: #fff;
 		border: 2px solid $color_main;
@@ -46,7 +45,6 @@
 		z-index: 1;
 		left: 0;
 		right: 0;
-		width: 100%;
 		transform: translate(0, 0);
 		transition: 0.3s;
 		box-sizing: content-box;
@@ -63,7 +61,6 @@
 		cursor: pointer;
 		padding: 20px;
 		text-align: left;
-		width: 100%;
 		transition: 0.2s;
 		border-bottom: 2px solid $color_main;
 		&:last-child {
@@ -71,6 +68,9 @@
 		}
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.2);
+		}
+		&._option-list {
+			border-bottom: none;
 		}
 		&._none {
 			display: none;

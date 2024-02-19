@@ -95,3 +95,4 @@ export class Modal {
     document.querySelector('.wrapper').style.paddingRight = 0
   }
 }
+
