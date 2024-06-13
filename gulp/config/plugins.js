@@ -4,6 +4,8 @@ import notify from 'gulp-notify'
 import browserSync from "browser-sync"
 import newer from "gulp-newer"
 import ifPlugin from 'gulp-if'
+import chalk from 'chalk'
+import through2 from 'through2';
 
 const plugins = {
   replace,
@@ -11,6 +13,8 @@ const plugins = {
   notify,
   browserSync,
   newer,
+  chalk,
+  through2,
   if: ifPlugin
 }
 

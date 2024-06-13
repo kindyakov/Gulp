@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="ru">
-@@include('html/components/_head.html',{
-"title":"Главная"
-})
+
+<head>
+	@@include('html/components/_head.html',{
+	"title": "@@fileName.title",
+	"description": "@@fileName.description",
+	"pathPrefix":"@@fileName.pathPrefix"
+	})
+</head>
 
 <body>
 	<div class="wrapper">
-		@@include('html/components/_header.html', {})
+		@@include('html/components/_header.html', {'pathPrefix':'@@webRoot/'})
 		<main class="main">
+
 		</main>
-		@@include('html/components/_footer.html',{})
+		@@include('html/components/_footer.html',{'pathPrefix':'@@webRoot/'})
 	</div>
-	@@include('html/components/_js.html',{})
+	@@include('html/components/_js.html',{'pathPrefix':'@@webRoot/'})
 </body>
 
 </html>

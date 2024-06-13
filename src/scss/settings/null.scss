@@ -49,6 +49,7 @@ input::-ms-clear {
 button {
 	cursor: pointer;
 	background-color: transparent;
+	touch-action: manipulation; /* отключение масштабирования */
 }
 button::-moz-focus-inner {
 	padding: 0;

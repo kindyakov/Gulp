@@ -40,4 +40,26 @@ const scss = () => {
   )
 }
 
-export default scss 
+export default scss
+
+export function insertCriticalCss() {
+  return (
+    app.gulp.src(app.path.src.scssCritical)
+      .pipe(sass({ outputStyle: `expanded` }))
+      .pipe(app.plugins.if(app.isBuild, groupCssMediaQueries()))
+      .pipe(app.plugins.if(app.isBuild, webpcss({
+        webpClass: '.webp',
+        noWebpClass: '.no-webp'
+      })))
+      .pipe(app.plugins.if(app.isBuild, autoprefixer({
+        grid: true,
+        overrideBrowserslist: ['Last 3 versions'],
+        cascade: true
+      })))
+      .pipe(app.plugins.if(app.isBuild, cleanCss()))
+      .pipe(app.gulp.dest(app.path.shared.css))
+      .on('end', function () {
+        console.log(app.plugins.chalk.green(`Добавлены критические стили`))
+      })
+  )
+}

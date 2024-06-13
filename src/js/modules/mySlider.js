@@ -1,13 +1,11 @@
-import Swiper from 'swiper';
-// import { Pagination } from 'swiper/modules';
-// import 'swiper/css';
-
 export class SliderAdaptive {
   constructor(selector, options) {
     let defaultOptions = {
       onInit: () => { },
       onDestroy: () => { },
       isDev: false,
+      maxWidth: 0,
+      swiperOptions,
     }
     this.sreenWidth = window.screen.width
     this.options = Object.assign(defaultOptions, options)
@@ -23,6 +21,9 @@ export class SliderAdaptive {
       this.options.isDev && console.log(`Слайдер не найде по селектору ${selector}`)
       return
     }
+
+    this.onInit = this.options.onInit
+    this.onDestroy = this.options.onDestroy
 
     this.events()
     if (this.sreenWidth < this.options.maxWidth) {
@@ -51,7 +52,7 @@ export class SliderAdaptive {
 
     this.swiper = new Swiper(this.sliderSelector, this.options.swiperOptions)
 
-    this.options.onInit()
+    this.onInit()
   }
 
   destroy() {
@@ -63,6 +64,6 @@ export class SliderAdaptive {
 
     this.swiper.destroy(true, true);
 
-    this.options.onDestroy()
+    this.onDestroy()
   }
 }

@@ -17,11 +17,11 @@
 	background-color: #fbf8ec;
 }
 *::-webkit-scrollbar-thumb {
-	background-color: #ff6633;
-	border-radius: 10px;
+	background-color: #000;
 }
 
 html {
+	scrollbar-gutter: stable;
 	// scroll-behavior: smooth;
 	&._lock {
 		overflow: hidden;
@@ -56,16 +56,14 @@ body {
 	max-width: $maxWidthContainer + px;
 	margin: 0 auto;
 	@media (max-width: $md1) {
-		max-width: 970px;
+		max-width: none;
+		padding: 0 10px;
 	}
 	// $md2: 992.98px;
 	@media (max-width: $md2) {
-		max-width: 750px;
 	}
 	//$md3: 768.98px;
 	@media (max-width: $md3) {
-		max-width: none;
-		padding: 0 10px;
 	}
 	// $md4: 576.98px;
 	@media (max-width: $md4) {
@@ -73,11 +71,14 @@ body {
 	// $md5: 479.98px;
 	@media (max-width: $md5) {
 	}
+	// $md6: 379.98px;
+	@media (max-width: $md6) {
+	}
 }
 
 @import 'components/header';
 @import 'components/footer';
-// @import 'components/modal';
+@import 'components/modal';
 
 // @import 'modules/accordion';
 // @import 'modules/buffer_copy';
@@ -85,6 +86,7 @@ body {
 // @import 'modules/select';
 // @import 'modules/output_info';
 // @import 'modules/loader';
+
 //<ОСНОВНОЙ БЛОК>
 .main {
 	flex: 1 1 auto;

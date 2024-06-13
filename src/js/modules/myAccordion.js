@@ -1,50 +1,51 @@
 // Добавить аккордиону класс _my-accordion
-// Добавить кнопке для раскритие аккордиона класс _my-accordion-controler
+// Добавить кнопке для раскритие аккордиона класс _my-accordion-control
 // Добавить контенту аккордиона класс _my-accordion-content
 
 export class Accordion {
-  constructor(selector, options) {
+  constructor(options) {
     let defaultOptions = {
-      isOpen: () => { },
-      isEvent: () => { },
-      onClose: () => { },
+      uniqueName: null,
       isAccordion: true,
-      initMaxWidth: 0
+      initMaxWidth: 0,
+      maxHeight: null,
+      accordSelector: '._my-accordion',
+      btnSelector: '._my-accordion-control',
+      contentSelector: '._my-accordion-content',
+      anim: height => [{ maxHeight: 0 }, { maxHeight: height + 'px' }],
+      duration: 300,
+      easing: 'ease-in-out',
+      onOpen: () => { },
+      onInit: () => { },
+      onEvent: () => { },
+      onClose: () => { }
     }
+
     this.options = Object.assign(defaultOptions, options)
-    this.accordWrapper = document.querySelector(selector)
-    this.accordSelector = options.btnSelector || '._my-accordion'
-    this.accordBtnSelector = options.btnSelector || '._my-accordion-controler'
-    this.accordContentSelector = options.contentSelector || '._my-accordion-content'
+    this.isAnim = false
 
-    if (this.accordWrapper) {
-      this.accords = this.accordWrapper.querySelectorAll(this.accordSelector)
-      this.accordBtns = this.accordWrapper.querySelectorAll(this.accordBtnSelector)
-      this.accordContents = this.accordWrapper.querySelectorAll(this.accordContentSelector)
-    } else {
-      return
-    }
+    this.onOpen = this.options.onOpen
+    this.onInit = this.options.onInit
+    this.onEvent = this.options.onEvent
+    this.onClose = this.options.onClose
 
-    const isSuccess = this.check()
-
-    if (isSuccess) {
-      this.init()
-      this.events()
-    }
+    this.init()
   }
 
   check() {
-    this.accords.forEach(el => {
-      const controler = document.querySelector(this.accordBtnSelector)
-      const content = document.querySelector(this.accordContentSelector)
+    if (!this.accords.length) return false
 
-      if (!controler) {
-        console.log(el, `Здесь ${el} не найден ._my-accordion-controler`)
+    this.accords.forEach(el => {
+      const control = document.querySelector(this.options.btnSelector)
+      const content = document.querySelector(this.options.contentSelector)
+
+      if (!control) {
+        console.log(el, `Здесь не найден ${this.options.btnSelector}`)
         return false
       }
 
       if (!content) {
-        console.log(el, `Здесь ${el} не найден ._my-accordion-content`)
+        console.log(el, `Здесь не найден ${this.options.contentSelector}`)
         return false
       }
     })
@@ -53,34 +54,39 @@ export class Accordion {
   }
 
   init() {
-    this.accords = this.accordWrapper.querySelectorAll(this.accordSelector)
-    this.accordBtns = this.accordWrapper.querySelectorAll(this.accordBtnSelector)
-    this.accordContents = this.accordWrapper.querySelectorAll(this.accordContentSelector)
+    if (this.options.uniqueName) {
+      this.accords = document.querySelectorAll(`${this.options.accordSelector}[data-special-accordion="${this.options.uniqueName}"]`)
+    } else {
+      this.accords = document.querySelectorAll(`${this.options.accordSelector}:not([data-special-accordion])`)
+    }
 
-    this.accords.forEach(el => el.classList.remove('_open'))
-    // this.accordBtns.forEach(el => el.classList.remove('_open'))
-    // this.accordContents.forEach(el => el.classList.remove('_open'))
+    const isSuccess = this.check()
+
+    if (isSuccess) {
+      this.accords.forEach(accord => accord.classList.remove('_open'))
+      this.events()
+      this.onInit(this.accords)
+    }
   }
 
   events() {
-    this.accordWrapper.addEventListener('click', e => {
-      if (e.target.closest(this.accordBtnSelector)) {
-        const accordionTarget = e.target.closest(this.accordSelector)
-        const accordionControler = accordionTarget.querySelector(this.accordBtnSelector)
-        const accordionContent = accordionTarget.querySelector(this.accordContentSelector)
+    this.accords.forEach(accordion => {
+      const accordionControl = accordion.querySelector(this.options.btnSelector)
+      const accordionContent = accordion.querySelector(this.options.contentSelector)
 
-        if (this.options.initMaxWidth && !window.matchMedia(`(max-width: ${this.options.initMaxWidth}px)`).matches) return
+      const initMaxWidth = accordion.getAttribute('data-init-max-width') || this.options.initMaxWidth
 
-        if (!accordionTarget.classList.contains('_open')) {
-          this.open(accordionTarget, accordionContent)
-          this.options.isOpen(e)
+      accordionControl.addEventListener('click', () => {
+        if (initMaxWidth && !window.matchMedia(`(max-width: ${initMaxWidth}px)`).matches) return
+
+        if (!accordion.classList.contains('_open')) {
+          this.open(accordion)
         } else {
-          accordionTarget.classList.remove('_open')
-          accordionContent.style.maxHeight = null
-          this.options.onClose(accordionTarget)
+          this.close()
         }
-      }
-      this.options.isEvent(e)
+
+        this.onEvent(accordion)
+      })
     })
 
     window.addEventListener('resize', () => {
@@ -92,18 +98,79 @@ export class Accordion {
     })
   }
 
-  open(accordionTarget, accordionContent) {
+  open(accordion) {
     this.options.isAccordion && this.close()
-    accordionTarget.classList.add('_open')
-    accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px'
+
+    const accordionContent = accordion.querySelector(this.options.contentSelector)
+
+    const duration = +accordion.getAttribute('data-duration') || this.options.duration
+    const easing = accordion.getAttribute('data-easing') || this.options.easing
+    const maxHeight = +accordion.getAttribute('data-max-height') || this.options.maxHeight
+
+    const accordionsInner = accordion.querySelectorAll('._my-accordion')
+    let addHeight = 0, timer
+
+    accordionsInner.length && accordionsInner.forEach(_accordion => {
+      addHeight += _accordion.scrollHeight
+    })
+
+    const contentHeight = maxHeight ? maxHeight : accordionContent.scrollHeight
+    this.isAnim = true
+
+    accordion.classList.add('_open')
+
+    const animation = accordionContent.animate(
+      this.options.anim(contentHeight),
+      {
+        duration,
+        easing,
+        fill: 'forwards'
+      }
+    );
+
+    animation.addEventListener('finish', () => {
+      accordionContent.style.maxHeight = (+contentHeight + +addHeight) + 'px';
+      this.isAnim = false
+      setTimeout(() => {
+        animation.effect.updateTiming({ fill: 'none' });
+        this.onOpen(accordion)
+      })
+    });
   }
 
   close() {
-    this.accords.forEach(el => el.classList.remove('_open'))
-    this.accordBtns.forEach(el => el.classList.remove('_open'))
-    this.accordContents.forEach(el => {
-      el.classList.remove('_open')
-      el.style.maxHeight = null
+    this.accords.forEach(accordion => {
+      const accordionContent = accordion.querySelector(this.options.contentSelector)
+
+      const duration = +accordion.getAttribute('data-duration') || this.options.duration
+      const easing = accordion.getAttribute('data-easing') || this.options.easing
+      const maxHeight = +accordion.getAttribute('data-max-height') || this.options.maxHeight
+
+      const contentHeight = maxHeight ? maxHeight : accordionContent.scrollHeight
+
+      if (!accordion.classList.contains('_open')) return
+
+      accordion.classList.remove('_open')
+      this.isAnim = true
+
+      const animation = accordionContent.animate(
+        this.options.anim(contentHeight),
+        {
+          duration,
+          easing,
+          direction: 'reverse',
+          fill: 'forwards'
+        }
+      )
+
+      animation.addEventListener('finish', () => {
+        accordionContent.style.maxHeight = null
+        this.isAnim = false
+        setTimeout(() => {
+          animation.effect.updateTiming({ fill: 'none' });
+          this.onClose(accordion)
+        })
+      })
     })
   }
 }

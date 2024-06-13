@@ -1,4 +1,4 @@
-export const utilsBurger = (selectorBurger = '.header-burger', selectorNav = '.header__nav') => {
+export const burger = (selectorBurger = '.header-burger', selectorNav = '.header__nav') => {
   const burger = document.querySelector(selectorBurger)
   const nav = document.querySelector(selectorNav)
   if (!burger || !nav) return
@@ -14,11 +14,12 @@ export const utilsBurger = (selectorBurger = '.header-burger', selectorNav = '.h
   })
 }
 
-export const utilsHeaderFixed = (selectorBurger = '.header-burger', selectorNav = '.header__nav') => {
+export const fixed = (selectorBurger = '.header-burger', selectorNav = '.header__nav') => {
   const header = document.querySelector('header')
   const headerBody = document.querySelector('.header__body')
   const burder = document.querySelector(selectorBurger)
   const nav = document.querySelector(selectorNav)
+  let timer
 
   if (!headerBody || !header) return
 
@@ -31,10 +32,11 @@ export const utilsHeaderFixed = (selectorBurger = '.header-burger', selectorNav 
     if (scrollY > headerHeight && !isFixed) {
       header.style.height = headerHeight + 'px'
       headerBody.style.cssText = `transform: translate(0, -100%);`
-      setTimeout(() => {
+      timer = setTimeout(() => {
         isFixed = true
         headerBody.classList.add('_fixed')
         headerBody.style.cssText = `transform: translate(0, 0);`
+        clearTimeout(timer)
       }, 200)
     } else if (scrollY === 0) {
       // header.removeAttribute('style')
@@ -45,7 +47,7 @@ export const utilsHeaderFixed = (selectorBurger = '.header-burger', selectorNav 
   })
 }
 
-export const utilsScroll = (selectorLinks = '.link-scroll') => {
+export const scroll = (selectorLinks = '.link-scroll') => {
   const links = document.querySelectorAll(selectorLinks)
   const headerBody = document.querySelector('.header__body')
   const fullPageHeight = Math.max(
@@ -55,23 +57,29 @@ export const utilsScroll = (selectorLinks = '.link-scroll') => {
     document.documentElement.offsetHeight // Высота всего документа с учетом отступов для более старых браузеров
   );
 
+  function scrollToSection(id) {
+    const section = document.querySelector(id)
+    if (!section) return
+
+    const rect = section.getBoundingClientRect();
+    const topPos = rect.top + document.documentElement.scrollTop - (headerBody ? headerBody.clientHeight + 20 : 0);
+
+    window.scrollTo({ top: topPos, behavior: 'smooth' });
+    history.replaceState(null, null, id);
+  }
 
   links.length && links.forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault()
       const id = link.getAttribute('href')
-      const section = document.querySelector(id)
-
-      if (!section) return
-      const sectionTopPos = section.offsetTop - (headerBody ? headerBody.clientHeight + 20 : 0)
-
-      window.scrollTo({ top: sectionTopPos, behavior: 'smooth' });
+      scrollToSection(id)
     })
-
   })
+
+  if (location.hash) scrollToSection(location.hash)
 }
 
-export const utilsDropdown = (
+export const dropdown = (
   { selectorDropdown = '.dropdown',
     selectorDropdownActive = '_dropdown-active',
     selectorSubDropdown = '.sub-dropdown',
@@ -151,7 +159,7 @@ export const utilsDropdown = (
   handleMediaChange(mediaQueryList);
 }
 
-export const utilsLinkActive = (linkSelector = '.header__link') => {
+export const linkActive = (linkSelector = '.header__link') => {
   const links = document.querySelectorAll(`a${linkSelector}`)
 
   links.length && links.forEach(link => {

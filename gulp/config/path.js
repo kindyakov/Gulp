@@ -1,9 +1,11 @@
 import * as nodePath from 'path'
 
+const dirname = nodePath.resolve()
 const rootFolder = nodePath.basename(nodePath.resolve())
 
 const buildFolder = `./dist`
 const srcFolder = `./src`
+const sharedFolder = `./shared`
 
 export const path = {
   build: {
@@ -21,6 +23,7 @@ export const path = {
   src: {
     html: `${srcFolder}/*.html`,
     scss: `${srcFolder}/scss/style.scss`,
+    scssCritical: `${srcFolder}/scss/critical/*.scss`,
     js: `${srcFolder}/js/app.js`,
     images: `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp,ico}`,
     svg: `${srcFolder}/img/**/*.svg`,
@@ -29,9 +32,13 @@ export const path = {
     php: `${srcFolder}/php/**/*.*`,
     video: `${srcFolder}/video/**/*.{mp3,mp4,avi,mkv,wmv,mov,flv,webm}`,
   },
+  shared: {
+    css: `${sharedFolder}/css/`
+  },
   watch: {
     html: `${srcFolder}/**/*.html`,
     scss: `${srcFolder}/scss/**/*.scss`,
+    scssCritical: `${srcFolder}/scss/critical/*.scss`,
     js: `${srcFolder}/js/**/*.js`,
     images: `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp,svg}`,
     svgicons: `${srcFolder}/svgicons/**/*.svg`,
@@ -42,5 +49,7 @@ export const path = {
   buildFolder,
   srcFolder,
   rootFolder,
+  sharedFolder,
+  dirname,
   ftp: ``
 }

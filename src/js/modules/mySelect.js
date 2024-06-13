@@ -1,107 +1,140 @@
+// Для инициализации select использовать класс "init-custom-select"  
+
 export class Select {
-  constructor(selector, options) {
+  constructor(options) {
     let defaultOptions = {
-      onChange: () => { },
+      uniqueName: null,
+      initSelect: '.init-custom-select',
       selectCustom: '_select-custom',
       selectInput: '.mySelect__input',
       selectList: '.mySelect__list',
       selectOption: '.mySelect__option',
       classActive: '_select',
       activeIndex: 0,
-      placeholder: false,
+      placeholder: '',
       isDev: false,
       isDisabled: false,
-      inputHtml: null
+      inputHtml: '',
+      onInit: () => { },
+      onChange: () => { },
+      onOpen: () => { },
+      onClose: () => { },
     }
 
-    this.selector = selector
+
     this.options = Object.assign(defaultOptions, options)
-    this.selects = document.querySelectorAll(`select${selector}`)
-    this.isActive = false
-    this.selectValue = null
+
+    if (this.options.uniqueName) {
+      this.selects = document.querySelectorAll(`select[data-special-select="${this.options.uniqueName}"]`)
+    } else {
+      this.selects = document.querySelectorAll(`select${this.options.initSelect}:not([data-special-select])`)
+    }
+
+    this.selectsCustom = []
 
     if (this.selects.length) {
 
     } else {
-      this.options.isDev && console.log(`Ошибка: не найден select c классом "${selector}"`)
+      this.options.isDev && console.log(`Ошибка: не найден select c классом "${this.options.initSelect}"`)
       return
     }
 
+    this.onInit = this.options.onInit
+    this.onChange = this.options.onChange
+    this.onOpen = this.options.onOpen
+    this.onClose = this.options.onClose
+
     this.init()
-    this.events()
   }
 
   init() {
+    this.selectsCustom = []
+
     this.selects.forEach(select => {
       const options = select.querySelectorAll('option')
       const selectName = select.getAttribute('name')
 
-      select.insertAdjacentHTML('afterend', this.customSelectHtml(selectName, options))
+      const selectCustom = select.getAttribute('data-special-select') || this.options.selectCustom
+      const activeIndex = select.getAttribute('data-active-index') || this.options.activeIndex
+      const placeholder = select.getAttribute('data-placeholder') || this.options.placeholder
+      const isDisabled = select.getAttribute('data-disabled') != null ? true : this.options.isDisabled
+      const inputHtml = select.getAttribute('data-input-html') || this.options.inputHtml
+
+      const customSelect = this.customSelectHtml({ selectName, selectCustom, options, activeIndex, placeholder, isDisabled, inputHtml })
+
+      select.insertAdjacentElement('afterend', customSelect)
       select.style.display = 'none'
+
+      this.selectsCustom.push(customSelect)
     })
 
-    this.selectCustom = document.querySelectorAll(`.mySelect.${this.options.selectCustom}`)
+    this.events()
+    this.onInit(this.selectsCustom)
   }
 
   events() {
-    document.addEventListener('click', e => {
-      if (!e.target.closest(`.mySelect.${this.options.selectCustom}`)) return
-      const select = e.target.closest(`.mySelect.${this.options.selectCustom}`)
-
-      if (select.classList.contains('_disabled')) return
-
+    this.selectsCustom.length && this.selectsCustom.forEach(select => {
       const selectInput = select.querySelector(this.options.selectInput)
       const selectInputSpan = select.querySelector(`${this.options.selectInput} span`)
-      const selectList = select.querySelector(this.options.selectList)
 
-      if (e.target.closest(this.options.selectInput)) {
-        // if (select.classList.contains(this.options.classActive) && this.isActive) {
-        //   this.close(select, selectList)
-        // } else {
-        this.open(select, selectList)
-        // }
-      }
+      select.addEventListener('click', e => {
+        if (select.classList.contains('_disabled')) return
 
-      if (e.target.closest(this.options.selectOption)) {
-        const optionValue = e.target.getAttribute('data-value')
-        const optionText = e.target.innerText
+        if (e.target.closest(this.options.selectInput)) {
+          if (select.classList.contains(this.options.classActive)) {
+            this.close(select)
+          } else {
+            this.open(select)
+          }
+        }
 
-        selectInputSpan.classList.remove('placeholder')
-        selectInputSpan.innerText = optionText
-        selectInput.setAttribute('data-value', optionValue)
+        if (e.target.closest(this.options.selectOption)) {
+          const option = e.target.closest(this.options.selectOption)
 
-        this.disableSelectedOption(select)
-        this.changeSelectOption(select, optionValue)
-        this.close(select, selectList)
+          const optionValue = option.getAttribute('data-value')
+          const optionText = option.innerText
 
-        this.options.onChange(e, select, optionValue)
-      }
+          selectInputSpan.classList.remove('placeholder')
+          selectInputSpan.innerText = optionText
+          selectInput.setAttribute('data-value', optionValue)
+
+          this.disableSelectedOption(select)
+          this.changeSelectOption(select, optionValue)
+          this.close(select)
+
+          this.onChange(e, select, optionValue)
+        }
+      })
     })
 
     window.addEventListener('keyup', (e) => {
       if (e.key === 'Escape') {
-        this.selectCustom.forEach(_select => this.close(_select))
+        this.selectsCustom.forEach(_select => this.close(_select))
       }
     })
 
     document.addEventListener('click', e => {
       if (!e.target.closest('.mySelect')) {
-        this.selectCustom.forEach(_select => this.close(_select))
+        this.selectsCustom.forEach(_select => this.close(_select))
       }
     })
   }
 
-  open(select, selectList) {
-    this.selectCustom.forEach(_select => this.close(_select))
+  open(select) {
+    const selectList = select.querySelector(this.options.selectList)
+
+    this.selectsCustom.forEach(_select => this.close(_select))
     select.classList.add(this.options.classActive)
     selectList.style.maxHeight = selectList.scrollHeight + 'px'
-    this.isActive = true
+
+    this.onOpen(select)
   }
 
   close(select) {
     select.classList.remove(this.options.classActive)
     select.querySelector(this.options.selectList).style.maxHeight = null
-    this.isActive = false
+
+    this.onClose(select)
   }
 
   disableSelectedOption(select) {
@@ -126,19 +159,26 @@ export class Select {
 
   changeSelectOption(select, optionValue) {
     const selectName = select.getAttribute('data-name')
-    const defaultSelect = document.querySelector(`${this.selector}[name="${selectName}"]`)
+    const defaultSelect = document.querySelector(`${this.options.initSelect}[name="${selectName}"]`)
     if (defaultSelect) {
       defaultSelect.value = optionValue
       this.selectValue = optionValue
     }
   }
 
-  customSelectHtml(name, options) {
-    return `<div class="mySelect ${this.options.selectCustom} ${this.options.isDisabled ? '_disabled' : ''}" data-name="${name}">
-    <div class="mySelect__input" data-value="${this.options.placeholder && this.options.placeholder.length ? null : options[this.options.activeIndex].value}">${this.options.placeholder && this.options.placeholder.length ? `<span class="placeholder">${this.options.placeholder}</span>` : `<span>${options[this.options.activeIndex].textContent}</span>`} ${this.options.inputHtml && this.options.inputHtml.length ? this.options.inputHtml : ''}</div>
+  customSelectHtml({ selectName, selectCustom, options, activeIndex, placeholder, isDisabled, inputHtml }) {
+    const mySelect = document.createElement("div")
+
+    mySelect.classList.add('mySelect')
+    mySelect.classList.add(selectCustom)
+    isDisabled && mySelect.classList.add('_disabled')
+    mySelect.setAttribute('data-name', selectName)
+
+    mySelect.innerHTML = `<div class="mySelect__input" data-value="${placeholder.length ? '' : options[activeIndex].value}">${placeholder.length ? `<span class="placeholder">${placeholder}</span>` : `<span>${options[activeIndex].textContent}</span>`} ${inputHtml.length ? inputHtml : ''}</div>
     <ul class="mySelect__list">
-    ${Array.from(options).map(option => `<li class="mySelect__option ${options[this.options.activeIndex].value === option.value && !this.options.placeholder ? '_none' : ''}" data-value="${option.value}">${option.textContent}</li>`).join('')}
-    </ul >
-  </div>`
+    ${Array.from(options).map(option => `<li class="mySelect__option ${options[activeIndex].value === option.value && !placeholder ? '_none' : ''}" data-value="${option.value}">${option.textContent}</li>`).join('')}
+    </ul>`
+
+    return mySelect
   }
 }

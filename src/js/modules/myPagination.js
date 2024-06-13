@@ -1,21 +1,22 @@
-import { buildQueryParams } from "../utils/buildQueryParams.js"
-import { getWarehouses } from "../settings/api.js"
-
 export class Pagination {
   constructor(wrap, options) {
     let defaultoptions = {
-      onChange: () => { },
-      onInit: () => { },
-      onInitPaging: () => { },
       page: null,
       pages: null,
       visibleMaxButtons: 5,
       visibleButtons: 3,
       isInitPaging: false,
       position: 'beforeend',
-      classPagging: 'myPagination'
+      classPagging: 'myPagination',
+      onChange: () => { },
+      onInit: () => { },
+      onInitPaging: () => { }
     }
     this.options = Object.assign(defaultoptions, options)
+
+    this.onChange = () => { }
+    this.onInit = () => { }
+    this.onInitPaging = () => { }
 
     this.paggingHtml = () => {
       return `<div class="pagging ${this.options.classPagging} _none">
@@ -58,7 +59,7 @@ export class Pagination {
       this.paggingPrev = this.pagging.querySelector('.pagging__arrow.left')
       this.paggingNext = this.pagging.querySelector('.pagging__arrow.right')
 
-      this.options.onInit()
+      this.onInit()
     }
   }
 
@@ -84,7 +85,7 @@ export class Pagination {
     this.options.isInitPaging = true
 
     this.changeClassPrevNext(this.options.pages, this.options.page)
-    this.options.onInitPaging()
+    this.onInitPaging()
   }
 
   event() {
@@ -102,7 +103,7 @@ export class Pagination {
 
           this.changePagging(this.options.pages, this.options.page)
           this.changeClassPrevNext(this.options.pages, this.options.page)
-          this.options.onChange({ currentBtn, prevBtn, page: this.options.page })
+          this.onChange({ currentBtn, prevBtn, page: this.options.page })
         }
       }
 
@@ -119,7 +120,7 @@ export class Pagination {
 
           this.changePagging(this.options.pages, this.options.page)
           this.changeClassPrevNext(this.options.pages, this.options.page)
-          this.options.onChange({ currentBtn, prevBtn, page: this.options.page })
+          this.onChange({ currentBtn, prevBtn, page: this.options.page })
         } else if (btn === this.paggingNext) {
           const prevBtn = this.paggingList.querySelector(`.pagging__item[data-page="${this.options.page}"]`)
           const currentBtn = this.paggingList.querySelector(`.pagging__item[data-page="${++this.options.page}"]`)
@@ -129,7 +130,7 @@ export class Pagination {
 
           this.changePagging(this.options.pages, this.options.page)
           this.changeClassPrevNext(this.options.pages, this.options.page)
-          this.options.onChange({ currentBtn, prevBtn, page: this.options.page })
+          this.onChange({ currentBtn, prevBtn, page: this.options.page })
         }
       }
     })

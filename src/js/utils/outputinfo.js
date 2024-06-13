@@ -9,8 +9,7 @@ export const outputInfo = ({ msg = 'Нет текста ответа', msg_type 
   ];
 
   let outputInfo = document.querySelector('.output-info')
-  let duration = 300, removeTime = 4000, spanArr = [], gap = 10
-
+  let duration = 400, removeTime = 5000, spanArr = [], gap = 10
 
   if (!outputInfo) {
     body.insertAdjacentHTML('beforeend', `<div class="output-info _active"></div>`)
@@ -23,6 +22,12 @@ export const outputInfo = ({ msg = 'Нет текста ответа', msg_type 
   outputInfo.insertAdjacentHTML('afterbegin', `<span class="output-info__span" data-top="20">${msg}</span>`)
 
   const span = outputInfo.querySelector('.output-info__span')
+
+  if (span.offsetWidth > window.innerWidth) {
+    span.style.width = '100%'
+    span.style.whiteSpace = 'wrap'
+  }
+
   const spanHeight = span.getBoundingClientRect().height
 
   const anim = span.animate(animateShow, { duration: duration });
@@ -45,16 +50,17 @@ export const outputInfo = ({ msg = 'Нет текста ответа', msg_type 
       let top = +el.getAttribute('data-top') + spanHeight + gap
       el.setAttribute('data-top', top)
       if (!el.classList.contains('_remove')) {
-        el.style.cssText = `transform: translate(-50%, ${top}px);`
+        el.style.transform = `translate(-50%, ${top}px)`
       }
     });
   }
 
   function finishAnim() {
-    span.style.cssText = `transform: translate(-50%, 20px);`
+    span.style.transform = `translate(-50%, 20px)`
 
     setTimeout(() => {
-      span.style.cssText = `transform: translate(-50%, ${span.dataset.top}px) scale(0); opacity: 0`
+      span.style.transform = `translate(-50%, ${span.dataset.top}px) scale(0)`
+      span.style.opacity = 0
       span.classList.add('_remove')
       setTimeout(() => {
         span.remove()

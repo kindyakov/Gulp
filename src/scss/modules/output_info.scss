@@ -16,9 +16,9 @@
 
 	&__span {
 		display: block;
-		transition: 0.2s;
+		transition: 0.3s;
 		font-weight: 600;
-		font-size: 20px;
+		@include adaptiv-font(20, 16, 1);
 		padding: 8px 12px;
 		border-radius: 4px;
 		color: #fff;

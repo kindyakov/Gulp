@@ -1,29 +1,34 @@
 export class Modal {
   constructor(selector, options) {
     let defaultoptions = {
-      onOpen: () => { },
-      onClose: () => { },
-      modalBtnActive: '.modal-btn-active',
       modalBtnClose: '.modal__close',
       classActive: '_active',
       modalContent: 'modal__body',
       isClose: true,
-      isAnimation: false
+      isAnimation: false,
+      unique: false,
+      onOpen: () => { },
+      onClose: () => { }
     }
     this.options = Object.assign(defaultoptions, options)
-    this.modal = document.querySelector(selector)
+    this.modals = document.querySelectorAll('.modal')
     this.speed = 300
     this.isOpen = false
     this.modalContainer = false
-    this.fixBocks = document.querySelectorAll('.fix-block')
+
+    this.mouseDownTarget = null
+    this.modalActive = null
+
+    this.onOpen = this.options.onOpen
+    this.onClose = this.options.onClose
 
     this.events()
   }
 
   events() {
-    if (!this.modal) return
+    if (!this.modals.length) return
     document.addEventListener('click', e => {
-      if (e.target.closest(this.options.modalBtnActive)) {
+      if (e.target.closest('[data-modal]')) {
         e.preventDefault()
         this.open(e)
         return
@@ -35,10 +40,16 @@ export class Modal {
       }
     })
 
-    this.modal.addEventListener('click', e => {
-      if (!e.target.closest(`.${this.options.modalContent}`) && this.isOpen) {
-        this.options.isClose && this.close()
+    document.addEventListener('mousedown', e => {
+      this.mouseDownTarget = e.target
+    })
+
+    document.addEventListener('mouseup', e => {
+      if (this.mouseDownTarget && this.mouseDownTarget === e.target && !e.target.closest(`.${this.options.modalContent}`) && this.isOpen) {
+        this.close(e);
       }
+
+      this.mouseDownTarget = null;
     })
 
     window.addEventListener('keyup', (e) => {
@@ -50,26 +61,42 @@ export class Modal {
     })
   }
 
-  close(selector) {
+  close() {
+    if (!this.modalActive) return
     this.isOpen = false
-    this.modal.classList.remove(this.options.classActive)
-    this.options.onClose(this)
+    this.modalActive.classList.remove(this.options.classActive)
+    this.onClose(this)
     this.enableScroll()
+    this.modalActive = null
   }
 
   open(e) {
+    const btn = e.target.closest('[data-modal]')
+    const modalSelector = btn.getAttribute('data-modal')
+
+    if (!modalSelector) {
+      console.error('У кнопки не задан селектор модального окна:', btn)
+      return
+    }
+
+    this.modalActive = document.querySelector(modalSelector)
+    if (!this.modalActive) {
+      console.error('Модальное окно не найдено по данному селектору:', modalSelector)
+      return
+    }
+
     setTimeout(() => {
-      this.modal.classList.add(this.options.classActive)
+      this.modalActive.classList.add(this.options.classActive)
       this.disableScroll()
 
       this.isOpen = true
-      this.options.onOpen(e)
+      this.onOpen(e)
     }, 0)
   }
 
   disableScroll() {
     const pagePos = window.scrollY
-    this.lockPadding()
+    // this.lockPadding()
     document.body.classList.add('_lock')
     document.body.dataset.position = pagePos
     // document.body.style.top = pagePos + 'px'
@@ -77,7 +104,7 @@ export class Modal {
 
   enableScroll() {
     const pagePos = parseInt(document.body.dataset.position, 10)
-    this.unlockPadding()
+    // this.unlockPadding()
     document.body.style.top = 'auto'
     document.body.classList.remove('_lock')
     window.scroll({ top: pagePos, left: 0 })
@@ -85,13 +112,13 @@ export class Modal {
   }
 
   lockPadding() {
-    const paddingOffset = window.innerWidth - document.body.offsetWidth + 'px'
-    this.modal.style.paddingRight = paddingOffset
-    document.querySelector('.wrapper').style.paddingRight = paddingOffset
+    const paddingOffset = window.innerWidth - document.body.offsetWidth
+    this.modalActive.style.paddingRight = paddingOffset ? paddingOffset + 'px' : 'none'
+    document.querySelector('.wrapper').style.paddingRight = paddingOffset + 'px'
   }
 
   unlockPadding() {
-    this.modal.removeAttribute('style')
+    this.modalActive.removeAttribute('style')
     document.querySelector('.wrapper').style.paddingRight = 0
   }
 }

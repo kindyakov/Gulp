@@ -7,7 +7,8 @@ export class Loader {
       isHidden: true,
       position: 'absolute',
       customSelector: '_custom-loader',
-      isCreate: true
+      isCreate: true,
+      id: ''
     }
     this.options = Object.assign(defaultoptions, options)
     this.wrapper = wrapper
@@ -29,11 +30,20 @@ export class Loader {
   }
 
   enable() {
+    if (this.options.id) {
+      this.loader.setAttribute('data-loader-id', this.options.id)
+    }
     this.loader.classList.add('_load')
   }
 
   disable() {
-    this.loader.classList.remove('_load')
+    if (this.options.id) {
+      if (this.options.id === this.loader.getAttribute('data-loader-id')) {
+        this.loader.classList.remove('_load')
+      }
+    } else {
+      this.loader.classList.remove('_load')
+    }
   }
 
   remove() {
