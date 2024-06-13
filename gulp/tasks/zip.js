@@ -32,7 +32,7 @@ export const zipDev = () => {
       .pipe(app.gulp.dest('./'))
       .on('end', async () => {
         if (!app.settings.repoUrl) {
-          console.log(app.log.error("Репозиторий ещё не создан выполните команду:"), app.plugins.chalk.italic('npm run gitDev'))
+          app.log.error('Репозиторий ещё не создан выполните команду:', app.plugins.chalk.italic('npm run gitDev'))
           return
         }
 
@@ -44,15 +44,15 @@ export const zipDev = () => {
 
         } catch (err) {
           if (err.message.includes('fatal: unable to auto-detect email address')) {
-            console.log(app.log.error('Пожалуйста, установите ваше имя и адрес электронной почты для Git, используя следующие команды:'));
-            console.log(app.log.error('git config --global user.name "Ваше имя"'));
-            console.log(app.log.error('git config --global user.email "ваша-почта@пример.com"'));
+            app.log.error('Пожалуйста, установите ваше имя и адрес электронной почты для Git, используя следующие команды:')
+            app.log.error('git config --global user.name "Ваше имя"')
+            app.log.error('git config --global user.email "ваша-почта@пример.com"')
             return;
           }
 
           if (err.message.includes('fatal: detected dubious ownership in repository')) {
-            console.log(app.log.error('Git обнаружил проблему с владельцем репозитория. Вы можете добавить исключение для этого каталога, вызвав следующую команду:'));
-            console.log(app.log.error(`git config --global --add safe.directory '${app.path.dirname}'`));
+            app.log.error('Git обнаружил проблему с владельцем репозитория. Вы можете добавить исключение для этого каталога, вызвав следующую команду:')
+            app.log.error(`git config --global --add safe.directory '${app.path.dirname}'`)
             return;
           }
 
@@ -74,7 +74,7 @@ export const zipDev = () => {
           fs.writeFileSync('settings.json', JSON.stringify(app.settings, null, 2));
         }
 
-        console.log(app.plugins.chalk.green(`Изменения добавлены: коммит "${app.version}"`))
+        app.log.success(`Изменения добавлены: коммит "${app.version}"`)
       })
       .on('error', (err) => console.error('Failed to commit+push', err))
   )

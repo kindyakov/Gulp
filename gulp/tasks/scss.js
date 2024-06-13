@@ -59,7 +59,7 @@ export function insertCriticalCss() {
       .pipe(app.plugins.if(app.isBuild, cleanCss()))
       .pipe(app.gulp.dest(app.path.shared.css))
       .on('end', function () {
-        console.log(app.plugins.chalk.green(`Добавлены критические стили`))
+        app.log.success('Добавлены критические стили')
       })
   )
 }

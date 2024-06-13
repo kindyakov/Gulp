@@ -12,7 +12,7 @@ function checkAndTransliterate(str) {
 
 export const createRepo = (done) => {
   if (app.settings.repoUrl) {
-    console.log(app.log.warning("Репозиторий уже создан:", app.settings.repoUrl))
+    app.log.warning("Репозиторий уже создан:", app.settings.repoUrl)
     done()
     return
   }
@@ -28,11 +28,11 @@ export const createRepo = (done) => {
     description: 'This is my new repository',
     private: true
   }).then(({ data }) => {
-    console.log(app.log.success("Репозиторий успешно создан:"), data.html_url);
+    app.log.success("Репозиторий успешно создан:", data.html_url)
     app.settings.repoUrl = data.html_url;
     fs.writeFileSync('settings.json', JSON.stringify(app.settings, null, 2));
     done()
   }).catch((error) => {
-    console.error(app.log.error("Ошибка при создании репозитория:"), error);
+    app.log.error("Ошибка при создании репозитория:", error)
   });
 };

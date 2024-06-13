@@ -34,7 +34,9 @@ global.app = {
   version: generateFileVersion(),
   settings,
   log: {
-    error, warning, success
+    error: (...args) => console.log(error(...args)),
+    warning: (...args) => console.log(warning(...args)),
+    success: (...args) => console.log(success(...args)),
   }
 }
 

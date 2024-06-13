@@ -92,7 +92,7 @@ export const generateHtmlData = () => {
   const dataPath = path.join(app.path.srcFolder, dataFileName)
 
   if (fs.existsSync(dataPath)) {
-    console.log(app.plugins.chalk.yellow(`Файл ${dataFileName} существует, чтобы обновить его, удалите файл ${dataFileName}`))
+    app.log.warning(`Файл ${dataFileName} существует, чтобы обновить его, удалите файл ${dataFileName}`)
     return app.gulp.src('.') // возвращает пустой поток
   }
 
@@ -120,6 +120,6 @@ export const generateHtmlData = () => {
       cb(null, file)
     }))
     .on('end', function () {
-      console.log(app.plugins.chalk.green(`Данные о страницах успешно сгенерированы и сохранены в файле ${dataFileName}`))
+      app.log.success(`Данные о страницах успешно сгенерированы и сохранены в файле ${dataFileName}`)
     })
 }
