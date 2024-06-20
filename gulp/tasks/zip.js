@@ -31,17 +31,21 @@ export const zipDev = () => {
       .pipe(zipPlugins(`${app.path.rootFolder}_dev.zip`))
       .pipe(app.gulp.dest('./'))
       .on('end', async () => {
+        app.log.info('Архив создан. Начинаем инициализацию git...')
+
         if (!app.settings.repoUrl) {
           app.log.error('Репозиторий ещё не создан выполните команду:', app.plugins.chalk.italic('npm run gitDev'))
           return
         }
 
         const gitInstance = git();
+        app.log.success('Git инициализирован.')
+
         try {
           await gitInstance.init();
           await gitInstance.add('./*');
           await gitInstance.commit(app.version);
-
+          app.log.success(`Коммит "${app.version}" создан.`)
         } catch (err) {
           if (err.message.includes('fatal: unable to auto-detect email address')) {
             app.log.error('Пожалуйста, установите ваше имя и адрес электронной почты для Git, используя следующие команды:')
@@ -60,15 +64,18 @@ export const zipDev = () => {
         }
 
         if (app.settings.useExistingRepo) {
+          app.log.info('Пушим в существующий репозиторий...')
           await gitInstance.push('origin', 'master');
         } else {
           const isOriginExists = (await gitInstance.getRemotes()).some(remote => remote.name === 'origin');
 
           if (!isOriginExists) {
             // await gitInstance.removeRemote('origin');
+            app.log.info('Добавляем удаленный репозиторий...')
             await gitInstance.addRemote('origin', app.settings.repoUrl);
           }
 
+          app.log.info('Пушим в удаленный репозиторий...')
           await gitInstance.push('origin', 'master', { '--repo': app.settings.repoUrl });
           app.settings.useExistingRepo = true;
           fs.writeFileSync('settings.json', JSON.stringify(app.settings, null, 2));

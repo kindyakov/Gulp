@@ -1,8 +1,8 @@
 import gulp from 'gulp'
-import { path } from './gulp/config/path.js'
-import plugins from './gulp/config/plugins.js'
 import dotenv from 'dotenv'
 import fs from 'fs'
+import plugins from './gulp/config/plugins.js'
+import { path } from './gulp/config/path.js'
 
 function generateFileVersion() {
   const date = new Date();
@@ -22,6 +22,7 @@ const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'))
 
 const error = plugins.chalk.bold.red;
 const success = plugins.chalk.bold.green;
+const info = plugins.chalk.blue;
 const warning = plugins.chalk.hex('#FFA500')
 
 // Глобальные переменные
@@ -37,6 +38,7 @@ global.app = {
     error: (...args) => console.log(error(...args)),
     warning: (...args) => console.log(warning(...args)),
     success: (...args) => console.log(success(...args)),
+    info: (...args) => console.log(info(...args)),
   }
 }
 
